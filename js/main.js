@@ -10,17 +10,18 @@
 // else create a new object literal
 var app = app || {};
 
-app.blastem = {
+app.main = {
 	// CONSTANT properties
-    WIDTH : 1500, 
-    HEIGHT: 900,
+    WIDTH : 1920 ,
+    HEIGHT: 1080,
+	dt: 1/60.0,
+	
 	GEM_PROBABILITY_PER_SECOND: 1.0,
     canvas: undefined,
     ctx: undefined,
     ship: undefined,
     shipb: undefined,
 	drawLib: undefined,
-	dt: 1/60.0,
 	app: undefined,
 	utils: undefined,
 	gems: [],
@@ -28,58 +29,63 @@ app.blastem = {
 	scoreb: 0,
 	friction: 15,
 	
+	aspectRatio: undefined,
     
     // methods
-	init : function(ship, shipb) {
-			console.log("app.blastem.init() called");
+	init : function() {
+			
 			// declare properties
 			this.canvas = document.querySelector('canvas');
 			this.canvas.width = this.WIDTH;
 			this.canvas.height = this.HEIGHT;
 			this.ctx = this.canvas.getContext('2d');
 			
+			
+			this.aspectRatio = this.WIDTH / this.HEIGHT;
 			// set up player ship
-			this.ship = ship;
+			this.ship = app.ship;
 			this.ship.init();
 			
-			this.shipb = shipb;
+			this.shipb = app.shipb;
 			this.shipb.init();
+			
+			this.drawLib = app.drawLib;
 			
 			this.update();
 	},
 	
 	moveSprites: function()
 	{
-		if(this.app.keydown[this.app.KEYBOARD.KEY_LEFT])
+		if(app.keydown[app.KEYBOARD.KEY_LEFT])
 		{
 			this.ship.moveLeft(this.dt);
 		}
-		if(this.app.keydown[this.app.KEYBOARD.KEY_RIGHT])
+		if(app.keydown[app.KEYBOARD.KEY_RIGHT])
 		{
 			this.ship.moveRight(this.dt);
 		}
-		if(this.app.keydown[this.app.KEYBOARD.KEY_UP])
+		if(app.keydown[app.KEYBOARD.KEY_UP])
 		{
 			this.ship.moveUp(this.dt);
 		}
-		if(this.app.keydown[this.app.KEYBOARD.KEY_DOWN])
+		if(app.keydown[app.KEYBOARD.KEY_DOWN])
 		{
 			this.ship.moveDown(this.dt);
 		}
 		
-		if(this.app.keydown[this.app.KEYBOARD.KEY_A])
+		if(app.keydown[app.KEYBOARD.KEY_A])
 		{
 			this.shipb.moveLeft(this.dt);
 		}
-		if(this.app.keydown[this.app.KEYBOARD.KEY_D])
+		if(app.keydown[app.KEYBOARD.KEY_D])
 		{
 			this.shipb.moveRight(this.dt);
 		}
-		if(this.app.keydown[this.app.KEYBOARD.KEY_W])
+		if(app.keydown[app.KEYBOARD.KEY_W])
 		{
 			this.shipb.moveUp(this.dt);
 		}
-		if(this.app.keydown[this.app.KEYBOARD.KEY_S])
+		if(app.keydown[app.KEYBOARD.KEY_S])
 		{
 			this.shipb.moveDown(this.dt);
 		}
@@ -288,6 +294,7 @@ app.blastem = {
 	{
 		requestAnimationFrame(this.update.bind(this));
 		
+		
 		this.drawLib.clear(this.ctx,0,0,this.WIDTH, this.HEIGHT);
 		
 		this.moveSprites();
@@ -326,7 +333,8 @@ app.blastem = {
 				location.reload();
 			},25);
 		}
-	}
+	},
+	
     
     
 }; // end app.blastem
