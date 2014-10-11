@@ -53,6 +53,8 @@ Modernizr.load(
 			'js/ship.js',
 			'js/shipb.js',
 			'js/utils.js',
+			'js/power_size.js',
+			'js/power_speed.js',
 			
 		],
 		

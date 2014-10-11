@@ -17,6 +17,8 @@ app.main = {
 	dt: 1/60.0,
 	
 	GEM_PROBABILITY_PER_SECOND: 1.0,
+	POWER_SIZE_PROBABILITY_PER_SECOND: 0.3,
+	POWER_SPEED_PROBABILITY_PER_SECOND: 0.3,
     canvas: undefined,
     ctx: undefined,
     ship: undefined,
@@ -25,6 +27,8 @@ app.main = {
 	app: undefined,
 	utils: undefined,
 	gems: [],
+	size_powerups: [],
+	speed_powerups: [],
 	scorea: 0,
 	scoreb: 0,
 	friction: 15,
@@ -227,23 +231,62 @@ app.main = {
 			this.shipb.y = 0 - this.shipb.radius;
 		}
 		
+		
+		
+		
+	},
+	
+	crystals : function()
+	{
+		var self = this;
+		//GEMS
 		if (Math.random() < this.GEM_PROBABILITY_PER_SECOND/60)
 		{
 			//console.log(this.gems);
 			this.gems.push(new app.Gem(this.WIDTH, this.HEIGHT));
 			//console.log("new gem " + xpos + " " + ypos);
 		}
-		
 		this.gems = this.gems.filter(function(gem)
 		{
 			return gem.active;
 		});
-		
-		var self = this;
-		
 		this.gems.forEach(function(gem)
 		{
 			gem.update(self.dt);
+		});
+		
+		//power up Grow
+		if (Math.random() < this.POWER_SIZE_PROBABILITY_PER_SECOND/60)
+		{
+			//console.log(this.gems);
+			this.size_powerups.push(new app.power_size(this.WIDTH, this.HEIGHT));
+			//console.log("new gem " + xpos + " " + ypos);
+		}
+		this.size_powerups = this.size_powerups.filter(function(power_size)
+		{
+			return power_size.active;
+		});
+		
+		this.size_powerups.forEach(function(power_size)
+		{
+			power_size.update(self.dt);
+		});
+		
+		//power up speed boost
+		if (Math.random() < this.POWER_SPEED_PROBABILITY_PER_SECOND/60)
+		{
+			//console.log(this.gems);
+			this.speed_powerups.push(new app.power_speed(this.WIDTH, this.HEIGHT));
+			//console.log("new gem " + xpos + " " + ypos);
+		}
+		this.speed_powerups = this.speed_powerups.filter(function(power_speed)
+		{
+			return power_speed.active;
+		});
+		
+		this.speed_powerups.forEach(function(power_speed)
+		{
+			power_speed.update(self.dt);
 		});
 	},
 	
@@ -279,6 +322,39 @@ app.main = {
 				self.scoreb += 1;
 			}
 		});
+		
+		this.size_powerups.forEach(function(size)
+		{
+		
+			if (self.collides(size, self.ship))
+			{
+				size.active = false;
+				
+				self.ship.radius += .5;
+				
+			}
+			if (self.collides(size, self.shipb))
+			{
+				size.active = false;
+				self.shipb.radius += .5;
+				
+				
+			}
+		});
+		this.speed_powerups.forEach(function(speed)
+		{
+			if (self.collides(speed, self.ship))
+			{
+				speed.active = false;
+				self.ship.maxVelocity ++;
+			}
+			if (self.collides(speed, self.shipb))
+			{
+				speed.active = false;
+				self.shipb.maxVelocity ++;
+				
+			}
+		});
 	},
 	
 	collides: function(a, b) //circle collision
@@ -290,6 +366,36 @@ app.main = {
 		return radsum * radsum >= xdiff * xdiff + ydiff * ydiff;
 	},
 	
+	draw: function(){
+		
+		var self = this;
+	
+		this.drawLib.backgroundGradient(this.ctx, this.WIDTH, this.HEIGHT);
+		
+		this.ship.draw(this.ctx);
+		this.shipb.draw(this.ctx);
+		
+		this.gems.forEach(function(gem)
+		{
+			gem.draw(self.ctx);
+		});
+		
+		this.size_powerups.forEach(function(power_size)
+		{
+			power_size.draw(self.ctx);
+		});
+		
+		this.speed_powerups.forEach(function(power_speed)
+		{
+			power_speed.draw(self.ctx);
+		});
+		
+		this.drawLib.text(this.ctx, "" + this.scorea, 10, 20, 18, "yellow");
+		this.drawLib.text(this.ctx, "" + this.scoreb, 10, 40, 18, "red");
+	
+	},
+	
+	
 	update: function()
 	{
 		requestAnimationFrame(this.update.bind(this));
@@ -297,24 +403,15 @@ app.main = {
 		
 		this.drawLib.clear(this.ctx,0,0,this.WIDTH, this.HEIGHT);
 		
+		this.crystals(); 
+		
 		this.moveSprites();
 		
 		this.checkCollisions();
 		
-		this.drawLib.backgroundGradient(this.ctx, this.WIDTH, this.HEIGHT);
+		this.draw();
 		
-		this.ship.draw(this.ctx);
-		this.shipb.draw(this.ctx);
 		
-		var self = this;
-		
-		this.gems.forEach(function(gem)
-		{
-			gem.draw(self.ctx);
-		});
-		
-		this.drawLib.text(this.ctx, "" + this.scorea, 10, 20, 18, "yellow");
-		this.drawLib.text(this.ctx, "" + this.scoreb, 10, 40, 18, "red");
 		
 		if(this.scorea >= 50)
 		{
@@ -337,4 +434,4 @@ app.main = {
 	
     
     
-}; // end app.blastem
+}; 
