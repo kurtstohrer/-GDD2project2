@@ -21,6 +21,7 @@ app.shipb = {
 	maxVelocity: 10,
 	image: undefined,
 	drawLib: undefined,
+	weight: 0,
 	
 	
 	init: function(){

@@ -13,8 +13,8 @@ app.power_size = function()
 		this.active = true;
 		this.xVelocity = 0;
 		this.yVelocity = 0;
-		this.radius = 15;
-		this.color = "#CE1CFF";
+		this.radius = 20;
+		this.color = "#5D00FF";
 	}
 	
 	var p = power_size.prototype;

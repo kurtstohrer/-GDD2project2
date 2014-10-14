@@ -55,7 +55,8 @@ Modernizr.load(
 			'js/utils.js',
 			'js/power_size.js',
 			'js/power_speed.js',
-			
+			'js/power_weight.js',
+			'js/power_acceleration.js',
 		],
 		
 		// when the loading is complete, this function will be called

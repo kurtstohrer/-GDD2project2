@@ -1,12 +1,12 @@
-//power_speed.js
+//power_weight.js
 
 "use strict"
 
 var app = app || {};
 
-app.power_speed = function()
+app.power_weight = function()
 {
-	function power_speed(width,height)
+	function power_weight(width,height)
 	{
 		this.x = Math.random() * width;
 		this.y = Math.random() * height;
@@ -14,10 +14,10 @@ app.power_speed = function()
 		this.xVelocity = 0;
 		this.yVelocity = 0;
 		this.radius = 20;
-		this.color = "#FF5900";
+		this.color = "#27DBB4";
 	}
 	
-	var p = power_speed.prototype;
+	var p = power_weight.prototype;
 	
 	p.update = function(dt)
 	{
@@ -42,5 +42,5 @@ app.power_speed = function()
 		return y >= -10;
 	};
 	
-	return power_speed;
+	return power_weight;
 }();

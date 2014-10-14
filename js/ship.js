@@ -15,12 +15,14 @@ app.ship = {
 	x: 700,
 	y: 450,
 	radius: 17,
-	speed: 30,
+	speed: 25,
 	xVelocity: 0,
 	yVelocity: 0,
 	maxVelocity: 10,
 	image: undefined,
 	drawLib: undefined,
+	weight: 0,
+	
 	
 	
 	init: function(){

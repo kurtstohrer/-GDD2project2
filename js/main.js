@@ -19,6 +19,8 @@ app.main = {
 	GEM_PROBABILITY_PER_SECOND: 1.0,
 	POWER_SIZE_PROBABILITY_PER_SECOND: 0.3,
 	POWER_SPEED_PROBABILITY_PER_SECOND: 0.3,
+	POWER_WEIGHT_PROBABILITY_PER_SECOND: 0.3,
+	POWER_ACCEL_PROBABILITY_PER_SECOND: 0.3,
     canvas: undefined,
     ctx: undefined,
     ship: undefined,
@@ -29,6 +31,8 @@ app.main = {
 	gems: [],
 	size_powerups: [],
 	speed_powerups: [],
+	weight_powerups: [],
+	accel_powerups: [],
 	scorea: 0,
 	scoreb: 0,
 	friction: 15,
@@ -288,6 +292,39 @@ app.main = {
 		{
 			power_speed.update(self.dt);
 		});
+		
+			//power up speed boost
+		if (Math.random() < this.POWER_WEIGHT_PROBABILITY_PER_SECOND/60)
+		{
+			//console.log(this.gems);
+			this.weight_powerups.push(new app.power_weight(this.WIDTH, this.HEIGHT));
+			//console.log("new gem " + xpos + " " + ypos);
+		}
+		this.weight_powerups = this.weight_powerups.filter(function(power_weight)
+		{
+			return power_weight.active;
+		});
+		
+		this.weight_powerups.forEach(function(power_weight)
+		{
+			power_weight.update(self.dt);
+		});
+		
+		if (Math.random() < this.POWER_ACCEL_PROBABILITY_PER_SECOND/60)
+		{
+			//console.log(this.gems);
+			this.accel_powerups.push(new app.power_accel(this.WIDTH, this.HEIGHT));
+			//console.log("new gem " + xpos + " " + ypos);
+		}
+		this.accel_powerups = this.accel_powerups.filter(function(power_accel)
+		{
+			return power_accel.active;
+		});
+		
+		this.weight_powerups.forEach(function(power_accel)
+		{
+			power_accel.update(self.dt);
+		});
 	},
 	
 	checkCollisions: function()
@@ -296,12 +333,12 @@ app.main = {
 		
 		if(this.collides(this.ship, this.shipb))
 		{
-			console.log("collision!");
+			
 			var xVel = (this.ship.xVelocity + this.shipb.xVelocity) / 2;
 			var yVel = (this.ship.yVelocity + this.shipb.yVelocity) / 2;
 			
-			var xBounce = (this.ship.xVelocity - this.shipb.xVelocity) * 0.5;
-			var yBounce = (this.ship.yVelocity - this.shipb.yVelocity) * 0.5;
+			var xBounce = ((this.ship.xVelocity + this.ship.weight) - (this.shipb.xVelocity + this.shipb.weight)) * 0.5;
+			var yBounce = ((this.ship.yVelocity + this.ship.weight) - (this.shipb.yVelocity + this.shipb.weight)) * 0.5;
 			
 			this.ship.xVelocity = xVel - xBounce;
 			this.ship.yVelocity = yVel - yBounce;
@@ -355,6 +392,34 @@ app.main = {
 				
 			}
 		});
+		this.weight_powerups.forEach(function(weight)
+		{
+			if (self.collides(weight, self.ship))
+			{
+				weight.active = false;
+				self.ship.weight ++;
+			}
+			if (self.collides(weight, self.shipb))
+			{
+				weight.active = false;
+				self.shipb.weight ++;
+				
+			}
+		});
+		this.accel_powerups.forEach(function(accel)
+		{
+			if (self.collides(accel, self.ship))
+			{
+				accel.active = false;
+				self.ship.speed ++;
+			}
+			if (self.collides(accel, self.shipb))
+			{
+				accel.active = false;
+				self.shipb.speed ++;
+				
+			}
+		});
 	},
 	
 	collides: function(a, b) //circle collision
@@ -388,6 +453,14 @@ app.main = {
 		this.speed_powerups.forEach(function(power_speed)
 		{
 			power_speed.draw(self.ctx);
+		});
+		this.weight_powerups.forEach(function(power_weight)
+		{
+			power_weight.draw(self.ctx);
+		});
+		this.accel_powerups.forEach(function(power_accel)
+		{
+			power_accel.draw(self.ctx);
 		});
 		
 		this.drawLib.text(this.ctx, "" + this.scorea, 10, 20, 18, "yellow");
