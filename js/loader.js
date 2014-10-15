@@ -78,7 +78,7 @@ Modernizr.load(
 				cancelAnimationFrame(app.animationID);
 				// start the animation back up
 				app.main.update();
-				app.main.startSoundtrack();
+				//app.main.startSoundtrack();
 			};
 			
 			// event listeners

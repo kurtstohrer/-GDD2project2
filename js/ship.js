@@ -14,20 +14,25 @@ app.ship = {
 	color: "yellow",
 	x: 700,
 	y: 450,
-	radius: 17,
+	radius: 16,
 	speed: 25,
 	xVelocity: 0,
 	yVelocity: 0,
 	maxVelocity: 10,
 	image: undefined,
+	spriteSize: 32,
+	spriteCrop: 32,
+	imgIndex: 0,
+	tics: 0,
+	ticsPerFrame: 4,
 	drawLib: undefined,
 	weight: 0,
 	
 	
-	
-	init: function(){
+	init: function(shipImage){
 		console.log("app.ship.init() called");
-	
+		
+		this.image = shipImage;
 	},
 	
 	moveLeft: function(dt)
@@ -68,6 +73,8 @@ app.ship = {
 	
 	draw: function(ctx)
 	{
+		this.animate();
+		
 		if(!this.image)
 		{
 			ctx.save();
@@ -79,5 +86,49 @@ app.ship = {
 			ctx.restore();
 		}
 		
+		// BEGIN CHAD CODE
+		else
+		{
+			ctx.save();
+			
+			ctx.drawImage(
+			this.image, //image
+			(this.imgIndex*this.spriteCrop), //x of the sprite sheet
+			0, // y of the sprite sheet
+			this.spriteCrop, // width of the crop
+			this.spriteCrop, // height of the crop
+			this.x - (this.spriteSize/2), // x coord of where to draw
+			this.y - (this.spriteSize/2), // y coord of where to draw
+			this.spriteSize, // width to draw the image
+			this.spriteSize); // height to draw the image
+			
+			ctx.restore();
+		}
+	},
+	
+	animate: function()
+	{
+		// increment tics
+		this.tics += 1;
+		
+		// if tics is >= the tics allowed per frame
+		// this controls the speed of the animation
+		if(this.tics >= this.ticsPerFrame)
+		{
+			// reset tics
+			this.tics = 0;
+			
+			// if we have reached the end of the sprite sheet
+			// if not, increment the imgIndex
+			if(this.imgIndex == 2)
+			{
+				// reset the counter, imgIndex and turn animating off
+				this.imgIndex = 0;
+				this.counter = 0;
+				//this.animating = false;
+			}
+			else this.imgIndex += 1;
+		}
 	}
+	// END CHAD CODE
 }; // end app.ship

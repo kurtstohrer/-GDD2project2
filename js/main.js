@@ -41,59 +41,102 @@ app.main = {
     
     // methods
 	init : function() {
+		
+		var keys = {};
+		window.addEventListener("keydown",function(e)
+		{
+			keys[e.keyCode] = true;
+			switch(e.keyCode)
+			{
+				case 37: 
+				case 39: 
+				case 38:  
+				case 40: // Arrow keys
+				case 32: // Space
+				{
+					e.preventDefault(); 
+					break;
+				}
+				default: break; // do not block other keys
+			}
+		},false);
+		
+		window.addEventListener('keyup',function(e)
+		{
+			keys[e.keyCode] = false;
+		},false);
 			
-			// declare properties
-			this.canvas = document.querySelector('canvas');
-			this.canvas.width = this.WIDTH;
-			this.canvas.height = this.HEIGHT;
-			this.ctx = this.canvas.getContext('2d');
+		// declare properties
+		this.canvas = document.querySelector('canvas');
+		this.canvas.width = this.WIDTH;
+		this.canvas.height = this.HEIGHT;
+		this.ctx = this.canvas.getContext('2d');
+		
+		// BEGIN CHAD CODE		
+		//load images
+		this.gemImage = new Image();
+		this.shipImage = new Image();
+		this.shipbImage = new Image();
+		
+		this.gemImage.src = "img/base gem sheet.png";
+		this.shipImage.src = "img/player1ship.png";
+		this.shipbImage.src = "img/player2ship.png";
+		// END CHAD CODE
 			
+		this.aspectRatio = this.WIDTH / this.HEIGHT;
+		// set up player ship
+		this.ship = app.ship;
+		this.ship.init(this.shipImage); //Chad: edited init to take in an image
 			
-			this.aspectRatio = this.WIDTH / this.HEIGHT;
-			// set up player ship
-			this.ship = app.ship;
-			this.ship.init();
+		this.shipb = app.shipb;
+		this.shipb.init(this.shipbImage);//Chad: edited init to take in an image
 			
-			this.shipb = app.shipb;
-			this.shipb.init();
+		this.drawLib = app.drawLib;
 			
-			this.drawLib = app.drawLib;
-			
-			this.update();
+		this.update();
 	},
-	
+	AIACTIVE: false, // for random walk AI added for no reason at all
 	moveSprites: function()
 	{
-		if(app.keydown[app.KEYBOARD.KEY_LEFT])
+		var randX = (this.AIACTIVE)? Math.random(): 0;                       // random walk
+		var randY = (this.AIACTIVE)? Math.random(): 0;                       // random walk
+		randX = (randX < 0.5&&randX > 0)? -1:(randX > 0.5&&randX < 1)? 1 : 0 // random walk
+		randY = (randY < 0.5&&randY > 0)? -1:(randY > 0.5&&randY < 1)? 1 : 0 // random walk
+		
+		if(app.keydown[app.KEYBOARD.KEY_LEFT]||randX == -1)
 		{
 			this.ship.moveLeft(this.dt);
 		}
-		if(app.keydown[app.KEYBOARD.KEY_RIGHT])
+		if(app.keydown[app.KEYBOARD.KEY_RIGHT]||randX == 1)
 		{
 			this.ship.moveRight(this.dt);
 		}
-		if(app.keydown[app.KEYBOARD.KEY_UP])
+		if(app.keydown[app.KEYBOARD.KEY_UP]||randY == -1)
 		{
 			this.ship.moveUp(this.dt);
 		}
-		if(app.keydown[app.KEYBOARD.KEY_DOWN])
+		if(app.keydown[app.KEYBOARD.KEY_DOWN]||randY == 1)
 		{
 			this.ship.moveDown(this.dt);
 		}
 		
-		if(app.keydown[app.KEYBOARD.KEY_A])
+		randX = (this.AIACTIVE)? Math.random(): 0;                           // random walk
+		randY = (this.AIACTIVE)? Math.random(): 0;                           // random walk
+		randX = (randX < 0.5&&randX > 0)? -1:(randX > 0.5&&randX < 1)? 1 : 0 // random walk
+		randY = (randY < 0.5&&randY > 0)? -1:(randY > 0.5&&randY < 1)? 1 : 0 // random walk
+		if(app.keydown[app.KEYBOARD.KEY_A]||randX == -1)
 		{
 			this.shipb.moveLeft(this.dt);
 		}
-		if(app.keydown[app.KEYBOARD.KEY_D])
+		if(app.keydown[app.KEYBOARD.KEY_D]||randX == 1)
 		{
 			this.shipb.moveRight(this.dt);
 		}
-		if(app.keydown[app.KEYBOARD.KEY_W])
+		if(app.keydown[app.KEYBOARD.KEY_W]||randY == -1)
 		{
 			this.shipb.moveUp(this.dt);
 		}
-		if(app.keydown[app.KEYBOARD.KEY_S])
+		if(app.keydown[app.KEYBOARD.KEY_S]||randY == 1)
 		{
 			this.shipb.moveDown(this.dt);
 		}
@@ -233,21 +276,17 @@ app.main = {
 		else if (this.shipb.y > this.HEIGHT + this.shipb.radius)
 		{
 			this.shipb.y = 0 - this.shipb.radius;
-		}
-		
-		
-		
-		
+		}		
 	},
 	
 	crystals : function()
 	{
 		var self = this;
 		//GEMS
-		if (Math.random() < this.GEM_PROBABILITY_PER_SECOND/60)
+		if (Math.random() < this.GEM_PROBABILITY_PER_SECOND/30)
 		{
 			//console.log(this.gems);
-			this.gems.push(new app.Gem(this.WIDTH, this.HEIGHT));
+			this.gems.push(new app.Gem(this.WIDTH, this.HEIGHT, this.gemImage));
 			//console.log("new gem " + xpos + " " + ypos);
 		}
 		this.gems = this.gems.filter(function(gem)
@@ -367,13 +406,15 @@ app.main = {
 			{
 				size.active = false;
 				
-				self.ship.radius += .5;
+				self.ship.spriteSize += .5;
+				self.ship.radius += .25;
 				
 			}
 			if (self.collides(size, self.shipb))
 			{
 				size.active = false;
-				self.shipb.radius += .5;
+				self.shipb.spriteSize += .5;
+				self.shipb.radius += .25;
 				
 				
 			}
@@ -450,16 +491,16 @@ app.main = {
 			power_size.draw(self.ctx);
 		});
 		
-		this.speed_powerups.forEach(function(power_speed)
-		{
+		this.speed_powerups.forEach(function(power_speed){
+		
 			power_speed.draw(self.ctx);
 		});
-		this.weight_powerups.forEach(function(power_weight)
-		{
+		this.weight_powerups.forEach(function(power_weight){
+		
 			power_weight.draw(self.ctx);
 		});
-		this.accel_powerups.forEach(function(power_accel)
-		{
+		this.accel_powerups.forEach(function(power_accel){
+		
 			power_accel.draw(self.ctx);
 		});
 		
@@ -469,8 +510,8 @@ app.main = {
 	},
 	
 	
-	update: function()
-	{
+	update: function(){
+	
 		requestAnimationFrame(this.update.bind(this));
 		
 		
@@ -486,25 +527,65 @@ app.main = {
 		
 		
 		
-		if(this.scorea >= 50)
-		{
-			setTimeout( function()
-			{
+		if(this.scorea >= 50){
+		
+			setTimeout( function(){
+			
 				alert("player 1 wins!");
 				location.reload();
 			},25);
 		}
 		
-		if(this.scoreb >= 50)
-		{
-			setTimeout( function()
-			{
+		if(this.scoreb >= 50){
+		
+			setTimeout( function(){
+			
 				alert("player 2 wins!");
 				location.reload();
-			},25);
+			},30);
 		}
 	},
 	
     
     
 }; 
+
+// BEGIN FORREST CODE -- The Wicked Awesome that is Argzero's code
+/* A Collection of Vector Functions */
+
+// returns distance between two objects with x and y attributes given as scalar float
+function distance(a, b){
+
+	return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+}
+
+// returns average middle vector object between two vector objects with x and y attributes given as an object with an x and y
+function averageVector(a,b){
+
+	return {x:(a.x + b.x)/2,y:(a.x + b.x)/2};
+}
+
+// returns magnitude of a vector object with an x and y attribute given as a float
+function vectorMagnitude(a){
+
+	return Math.sqrt(Math.pow(a.x + a.x, 2) + Math.pow(a.y + a.y, 2));
+}
+
+// returns the passed vector object (with an x and a y) as its normalized vector
+function normalizeVector(a){
+
+	return {x: a.x/vectorMagnitude(a), y:a.y/vectorMagnitude(a)};
+}
+
+// returns the passed vector object (with an x and a y) as itself multiplied by a scalar value
+function multVector(a,b){
+
+	return {x: a.x * b, y: a.y * b};
+}
+
+// scales a value between min and max to instead be between mappedMin and mappedMax
+// function map(value, min, max, mappedMin, mappedMax)
+// {
+// 	return (((value-min)/(max-min))*(mappedMax-mappedMin))- mappedMin;
+// }
+// END FORREST CODE
