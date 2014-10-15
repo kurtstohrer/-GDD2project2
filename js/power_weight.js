@@ -14,7 +14,7 @@ app.power_weight = function()
 		this.xVelocity = 0;
 		this.yVelocity = 0;
 		this.radius = 20;
-		this.color = "#27DBB4";
+		this.color = "#6AFF00";
 	}
 	
 	var p = power_weight.prototype;

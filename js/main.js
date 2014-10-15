@@ -37,6 +37,10 @@ app.main = {
 	scoreb: 0,
 	friction: 15,
 	
+	countDown: 60,
+	coolDown:60,
+	gameState: 1,
+	
 	aspectRatio: undefined,
     
     // methods
@@ -72,6 +76,7 @@ app.main = {
 		this.canvas.height = this.HEIGHT;
 		this.ctx = this.canvas.getContext('2d');
 		
+		this.gameState = 1;
 		// BEGIN CHAD CODE		
 		//load images
 		this.gemImage = new Image();
@@ -96,6 +101,23 @@ app.main = {
 		this.update();
 	},
 	AIACTIVE: false, // for random walk AI added for no reason at all
+	
+	menuControls: function(){
+	
+		if(app.keydown[app.KEYBOARD.KEY_ENTER])
+		{
+			if(this.gameState ==1){
+				this.gameState = 2;
+			
+			}
+			if(this.gameState ==3){
+				location.reload();
+			
+			}
+		}
+	
+	
+	},
 	moveSprites: function()
 	{
 		var randX = (this.AIACTIVE)? Math.random(): 0;                       // random walk
@@ -301,9 +323,9 @@ app.main = {
 		//power up Grow
 		if (Math.random() < this.POWER_SIZE_PROBABILITY_PER_SECOND/60)
 		{
-			//console.log(this.gems);
+			
 			this.size_powerups.push(new app.power_size(this.WIDTH, this.HEIGHT));
-			//console.log("new gem " + xpos + " " + ypos);
+			
 		}
 		this.size_powerups = this.size_powerups.filter(function(power_size)
 		{
@@ -315,12 +337,12 @@ app.main = {
 			power_size.update(self.dt);
 		});
 		
-		//power up speed boost
+		
 		if (Math.random() < this.POWER_SPEED_PROBABILITY_PER_SECOND/60)
 		{
-			//console.log(this.gems);
+			
 			this.speed_powerups.push(new app.power_speed(this.WIDTH, this.HEIGHT));
-			//console.log("new gem " + xpos + " " + ypos);
+			
 		}
 		this.speed_powerups = this.speed_powerups.filter(function(power_speed)
 		{
@@ -332,12 +354,12 @@ app.main = {
 			power_speed.update(self.dt);
 		});
 		
-			//power up speed boost
+			
 		if (Math.random() < this.POWER_WEIGHT_PROBABILITY_PER_SECOND/60)
 		{
-			//console.log(this.gems);
+		
 			this.weight_powerups.push(new app.power_weight(this.WIDTH, this.HEIGHT));
-			//console.log("new gem " + xpos + " " + ypos);
+			
 		}
 		this.weight_powerups = this.weight_powerups.filter(function(power_weight)
 		{
@@ -351,9 +373,9 @@ app.main = {
 		
 		if (Math.random() < this.POWER_ACCEL_PROBABILITY_PER_SECOND/60)
 		{
-			//console.log(this.gems);
+			
 			this.accel_powerups.push(new app.power_accel(this.WIDTH, this.HEIGHT));
-			//console.log("new gem " + xpos + " " + ypos);
+			
 		}
 		this.accel_powerups = this.accel_powerups.filter(function(power_accel)
 		{
@@ -461,6 +483,8 @@ app.main = {
 				
 			}
 		});
+		
+		
 	},
 	
 	collides: function(a, b) //circle collision
@@ -472,41 +496,88 @@ app.main = {
 		return radsum * radsum >= xdiff * xdiff + ydiff * ydiff;
 	},
 	
+	timer: function (){
+		this.coolDown --;
+		
+		if(this.coolDown <=0){
+			this.countDown --;
+			this.coolDown = 60;
+		}
+	
+	},
 	draw: function(){
 		
 		var self = this;
 	
 		this.drawLib.backgroundGradient(this.ctx, this.WIDTH, this.HEIGHT);
 		
-		this.ship.draw(this.ctx);
-		this.shipb.draw(this.ctx);
-		
-		this.gems.forEach(function(gem)
+		if(this.gameState == 1)
 		{
-			gem.draw(self.ctx);
-		});
 		
-		this.size_powerups.forEach(function(power_size)
-		{
-			power_size.draw(self.ctx);
-		});
+			this.drawLib.text(this.ctx, "CRYSTALLINE COLLECTOR" , this.WIDTH/2 - 625, 300, 100, "white");
+			
+			this.drawLib.text(this.ctx, "[ PRESS ENTER TO START ]" , this.WIDTH/2 - 375, 700, 50, "white");
 		
-		this.speed_powerups.forEach(function(power_speed){
+		}
 		
-			power_speed.draw(self.ctx);
-		});
-		this.weight_powerups.forEach(function(power_weight){
+		if(this.gameState == 2){
+			this.ship.draw(this.ctx);
+			this.shipb.draw(this.ctx);
+			
+			this.gems.forEach(function(gem)
+			{
+				gem.draw(self.ctx);
+			});
+			
+			this.size_powerups.forEach(function(power_size)
+			{
+				power_size.draw(self.ctx);
+			});
+			
+			this.speed_powerups.forEach(function(power_speed){
+			
+				power_speed.draw(self.ctx);
+			});
+			this.weight_powerups.forEach(function(power_weight){
+			
+				power_weight.draw(self.ctx);
+			});
+			this.accel_powerups.forEach(function(power_accel){
+			
+				power_accel.draw(self.ctx);
+			});
+			
+			this.drawLib.text(this.ctx, "" + this.scorea, 10, 20, 18, "blue");
+			this.drawLib.text(this.ctx, "" + this.scoreb, 10, 40, 18, "red");
+			
+			if(this.countDown > 5){
+					this.drawLib.text(this.ctx, "" + this.countDown, this.WIDTH/2 - 20, this.HEIGHT- 10, 40, "white");
+			}
+			if(this.countDown <= 5){
+					this.drawLib.outlinedText(this.ctx, "" + this.countDown, this.WIDTH/2 - 100, this.HEIGHT/2 +100, 300, "#FFBF00","white");
+			}
+		}
 		
-			power_weight.draw(self.ctx);
-		});
-		this.accel_powerups.forEach(function(power_accel){
+		if(this.gameState == 3){
 		
-			power_accel.draw(self.ctx);
-		});
+				
+					
+					if(this.scorea > this.scoreb){
+							this.drawLib.text(this.ctx, "WINNER" , this.WIDTH/2 - 200, 300, 100, "white");
+							this.drawLib.text(this.ctx, "Blue Ship!" , this.WIDTH/2 - 175, 350, 50, "blue");
+						}
+					if(this.scoreb > this.scorea){
+						this.drawLib.text(this.ctx, "WINNER" , this.WIDTH/2 - 200, 300, 100, "white");
+						this.drawLib.text(this.ctx, "Red Ship! " , this.WIDTH/2 - 160, 350, 50, "red");
+					}
+					if(this.scoreb == this.scorea){
+					
+						this.drawLib.text(this.ctx, "DRAW" , this.WIDTH/2 - 150, 300, 100, "white");
+					}
+					
+				this.drawLib.text(this.ctx, "[ PRESS ENTER TO PLAY AGAIN ]" , this.WIDTH/2 - 450, 700, 50, "white");
 		
-		this.drawLib.text(this.ctx, "" + this.scorea, 10, 20, 18, "yellow");
-		this.drawLib.text(this.ctx, "" + this.scoreb, 10, 40, 18, "red");
-	
+		}
 	},
 	
 	
@@ -517,33 +588,30 @@ app.main = {
 		
 		this.drawLib.clear(this.ctx,0,0,this.WIDTH, this.HEIGHT);
 		
-		this.crystals(); 
+		this.menuControls();
 		
-		this.moveSprites();
 		
-		this.checkCollisions();
+		if(this.gameState == 2){
+		
+			this.crystals(); 
+			
+			this.moveSprites();
+			
+			this.checkCollisions();
+			
+			this.timer();
+			
+			if(this.countDown <= 0){
+			this.gameState =3;
+		
+			}
+		}
 		
 		this.draw();
 		
 		
 		
-		if(this.scorea >= 50){
 		
-			setTimeout( function(){
-			
-				alert("player 1 wins!");
-				location.reload();
-			},25);
-		}
-		
-		if(this.scoreb >= 50){
-		
-			setTimeout( function(){
-			
-				alert("player 2 wins!");
-				location.reload();
-			},30);
-		}
 	},
 	
     

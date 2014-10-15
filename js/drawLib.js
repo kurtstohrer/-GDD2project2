@@ -25,6 +25,18 @@ app.drawLib = {
 		ctx.fillText(string, x, y);
 		ctx.restore();
 	},
+	outlinedText: function(ctx, string, x, y, size, col, out)
+	{
+		ctx.save();
+		ctx.font = 'bold ' + size + 'px Monospace';
+		
+		
+		ctx.fillStyle = col;
+		ctx.strokeStyle = out;
+		ctx.fillText(string, x, y);
+		ctx.strokeText(string,x,y);
+		ctx.restore();
+	},
 	
 	backgroundGradient : function(ctx, width, height)
 	{

@@ -12,7 +12,7 @@ var app = app || {};
 // the 'ship' object literal is now a property of our 'app' global variable
 app.ship = {
 	color: "yellow",
-	x: 700,
+	x: app.main.WIDTH/2 + 200,
 	y: 450,
 	radius: 16,
 	speed: 25,
