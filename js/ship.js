@@ -26,7 +26,7 @@ app.ship = {
 	tics: 0,
 	ticsPerFrame: 4,
 	drawLib: undefined,
-	weight: 0,
+	weight: 5,
 	
 	
 	init: function(shipImage){

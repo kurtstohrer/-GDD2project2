@@ -10,6 +10,7 @@
 // else create a new object literal
 var app = app || {};
 var music;
+var title;
 
 app.main = {
 	// CONSTANT properties
@@ -38,7 +39,7 @@ app.main = {
 	scoreb: 0,
 	friction: 15,
 	
-	countDown: 60,
+	countDown: 5,
 	coolDown:60,
 	gameState: 1,
 	
@@ -48,8 +49,11 @@ app.main = {
 	init : function() {
 	
 		music = new Audio("music/od.wav");
+		title = new Audio("music/title.wav");
+		title.volume = 0.2;
 		music.loop = true;
-		
+		title.loop = true;
+		title.play();
 		var keys = {};
 		window.addEventListener("keydown",function(e)
 		{
@@ -112,11 +116,14 @@ app.main = {
 		{
 			if(this.gameState ==1){
 				this.gameState = 2;
+				title.loop=false;
+				title.pause();
+				music.volume = 0.2;
 				music.play();
 			}
 			if(this.gameState ==3){
 				location.reload();
-			
+				music.pause();
 			}
 		}
 	
@@ -167,11 +174,11 @@ app.main = {
 			this.shipb.moveDown(this.dt);
 		}
 		
-		this.ship.x += this.ship.xVelocity;
-		this.ship.y += this.ship.yVelocity;
+		this.ship.x += this.ship.xVelocity * this.elapsed/10;
+		this.ship.y += this.ship.yVelocity * this.elapsed/10;
 		
-		this.shipb.x += this.shipb.xVelocity;
-		this.shipb.y += this.shipb.yVelocity;
+		this.shipb.x += this.shipb.xVelocity * this.elapsed/10;
+		this.shipb.y += this.shipb.yVelocity * this.elapsed/10;
 		
 		if(this.ship.xVelocity > 0)
 		{
@@ -402,13 +409,15 @@ app.main = {
 			var xVel = (this.ship.xVelocity + this.shipb.xVelocity) / 2;
 			var yVel = (this.ship.yVelocity + this.shipb.yVelocity) / 2;
 			
-			var xBounce = ((this.ship.xVelocity + this.ship.weight) - (this.shipb.xVelocity + this.shipb.weight)) * 0.5;
-			var yBounce = ((this.ship.yVelocity + this.ship.weight) - (this.shipb.yVelocity + this.shipb.weight)) * 0.5;
+			//var xBounce = ((this.ship.xVelocity * this.ship.weight / 10) - (this.shipb.xVelocity * this.shipb.weight / 10)) * 0.5;
+			//var yBounce = ((this.ship.yVelocity * this.ship.weight / 10) - (this.shipb.yVelocity * this.shipb.weight / 10)) * 0.5;
+			var xBounce = (this.ship.xVelocity - this.shipb.xVelocity) * 0.5;
+			var yBounce = (this.ship.yVelocity - this.shipb.yVelocity) * 0.5;
 			
-			this.ship.xVelocity = xVel - xBounce;
-			this.ship.yVelocity = yVel - yBounce;
-			this.shipb.xVelocity = xVel + xBounce;
-			this.shipb.yVelocity = yVel + yBounce;
+			this.ship.xVelocity = xVel - xBounce * this.shipb.weight / this.ship.weight;
+			this.ship.yVelocity = yVel - yBounce * this.shipb.weight / this.ship.weight;
+			this.shipb.xVelocity = xVel + xBounce * this.ship.weight / this.shipb.weight;
+			this.shipb.yVelocity = yVel + yBounce* this.ship.weight / this.shipb.weight;
 		}	
 
 		this.gems.forEach(function(gem)
@@ -501,7 +510,7 @@ app.main = {
 	},
 	
 	timer: function (){
-		this.coolDown --;
+		this.coolDown -= this.elapsed/10;
 		
 		if(this.coolDown <=0){
 			this.countDown --;
@@ -584,11 +593,13 @@ app.main = {
 		}
 	},
 	
-	
+	start: Date.now(),
+	elapsed: 0,
 	update: function(){
 	
 		requestAnimationFrame(this.update.bind(this));
-		
+		this.elapsed = Date.now()-this.start;
+		this.start = Date.now();
 		
 		this.drawLib.clear(this.ctx,0,0,this.WIDTH, this.HEIGHT);
 		

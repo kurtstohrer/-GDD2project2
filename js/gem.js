@@ -52,12 +52,12 @@ app.Gem = function()
 		distA = distance({x:shipA.x, y:shipA.y}, {x:this.x, y:this.y});
 		distB = distance({x:shipB.x, y:shipB.y}, {x:this.x, y:this.y});
 		
-		if(distA < distB && distA < 150)
+		if(distA < distB && (distA < shipA.radius*5 + 120))
 		{
 			this.closestShip = shipA;
 			currentDistance = distA;
 		}
-		else if(distB < distA && distB < 150)
+		else if(distB < distA && (distB < shipB.radius*5 + 120))
 		{
 			this.closestShip = shipB;
 			currentDistance = distB;
@@ -69,27 +69,53 @@ app.Gem = function()
 		/// modifies velocity to head towards the nearest ship within range
 		/// </summary>
 		// *
-		if(this.closestShip)
-		{
-			if(this.velocityPlus < 20) { this.velocityPlus += 0.5; }
-			var heading = {x: this.x-this.closestShip.x, y: this.y-this.closestShip.y};
-			var direction = {x: heading.x/currentDistance,y: heading.y/currentDistance};
-			var mag = vectorMagnitude({x: this.xVelocity, y: this.yVelocity});
-			var newVector = {x: this.xVelocity-((0.2)*(mag*direction.x)), y: this.yVelocity-((0.2)*(mag*direction.y))};
-			newVector = multVector(normalizeVector(newVector),mag);
-			this.xVelocity = newVector.x;
-			this.yVelocity = newVector.y;
+		if(this.velocityPlus < 10) { this.velocityPlus += 0.2; }
+			
+			
+		var heading1;
+		var direction1;
+		var heading2;
+		var direction2;
+		var avgHead;
+		var avgDir = {x: 0, y: 0};
+		var avgDist;
+		if((distA<shipA.radius*5 + 50) && !(distB<shipB.radius*5 + 50)){
+			heading1 = {x: this.x-shipA.x, y: this.y-shipA.y};
+			avgHead = heading1;
+			direction1 = {x: heading1.x/distA,y: heading1.y/distA};
+			avgDir = direction1;
+		}
+		else if((distB<shipB.radius*5 + 50) && !(distA<shipA.radius*5 + 50)){
+			heading2 = {x: this.x-shipB.x, y: this.y-shipB.y};
+			avgHead = heading2;
+			direction2 = {x: heading2.x/distB,y: heading2.y/distB};
+			avgDir = direction2;
+		}
+		else if((distA<shipA.radius*5 + 50) && (distB<shipB.radius*5 + 50)){
+			heading1 = {x: this.x-shipA.x, y: this.y-shipA.y};
+			heading2 = {x: this.x-shipB.x, y: this.y-shipB.y};
+			avgHead = averageVector(heading1,heading2);
+			avgDist = Math.abs(vectorMagnitude(avgHead));
+			avgDir = {x: avgHead.x/avgDist,y: avgHead.y/avgDist};;
 		}
 		else 
 		{
 			if(this.velocityPlus > 1) { this.velocityPlus -= 0.1; }
 		}
+
+		var mag = vectorMagnitude({x: this.xVelocity, y: this.yVelocity});
+		var newVector = {x: this.xVelocity-((0.1)*(mag*avgDir.x)), y: this.yVelocity-((0.1)*(mag*avgDir.y))};
+		newVector = multVector(normalizeVector(newVector),mag);
+		this.xVelocity = newVector.x;
+		this.yVelocity = newVector.y;
+			
+		
 		// *
 		// END FORREST CODE
 		
 		
-		this.x += (this.xVelocity * (this.velocityPlus)) * dt;
-		this.y += (this.yVelocity * (this.velocityPlus)) * dt;
+		this.x += (this.xVelocity * (this.velocityPlus)) * dt * app.main.elapsed/10;
+		this.y += (this.yVelocity * (this.velocityPlus)) * dt * app.main.elapsed/10;
 	};
 	
 	p.draw = function(ctx)
