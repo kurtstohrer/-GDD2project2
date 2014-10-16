@@ -9,6 +9,7 @@
 // if app exists use the existing copy
 // else create a new object literal
 var app = app || {};
+var music;
 
 app.main = {
 	// CONSTANT properties
@@ -45,6 +46,9 @@ app.main = {
     
     // methods
 	init : function() {
+	
+		music = new Audio("music/od.wav");
+		music.loop = true;
 		
 		var keys = {};
 		window.addEventListener("keydown",function(e)
@@ -108,7 +112,7 @@ app.main = {
 		{
 			if(this.gameState ==1){
 				this.gameState = 2;
-			
+				music.play();
 			}
 			if(this.gameState ==3){
 				location.reload();
