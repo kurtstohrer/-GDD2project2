@@ -14,12 +14,13 @@ app.Gem = function()
 		this.xVelocity = Math.random() * 40 - 20; // added initial velocities
 		this.yVelocity = Math.random() * 30 - 15; // added initial velocities
 		this.velocityPlus;
-		this.radius = 12;
+		this.radius = 10;
 		this.color = "#0F0";
 		this.closestShip = undefined;
 		//image
 		this.image = gemImage;
-		this.spriteSize = 16;
+		this.spriteSize = 20;
+		this.spriteCrop = 16
 		
 		//for animation
 		this.imgIndex = 0;
@@ -145,10 +146,10 @@ app.Gem = function()
 		// BEGIN CHAD CODE
 		ctx.drawImage(
 			this.image, //image
-			(this.imgIndex*this.spriteSize), //x of the sprite sheet
+			(this.imgIndex*this.spriteCrop), //x of the sprite sheet
 			0, // y of the sprite sheet
-			this.spriteSize, // width of the crop
-			this.spriteSize, // height of the crop
+			this.spriteCrop, // width of the crop
+			this.spriteCrop, // height of the crop
 			this.x - (this.spriteSize/2), // x coord of where to draw
 			this.y - (this.spriteSize/2), // y coord of where to draw
 			this.spriteSize, // width to draw the image

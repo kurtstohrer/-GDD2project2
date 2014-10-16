@@ -39,7 +39,7 @@ app.main = {
 	scoreb: 0,
 	friction: 15,
 	
-	countDown: 5,
+	countDown: 60,
 	coolDown:60,
 	gameState: 1,
 	
