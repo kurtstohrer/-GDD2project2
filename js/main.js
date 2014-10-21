@@ -94,7 +94,7 @@ app.main = {
 		this.shipImage = new Image();
 		this.shipbImage = new Image();
 		
-		this.gemImage.src = "img/base gem sheet.png";
+		this.gemImage.src = "img/base gem sheet contrasted.png";
 		this.shipImage.src = "img/player1ship.png";
 		this.shipbImage.src = "img/player2ship.png";
 		// END CHAD CODE
@@ -336,7 +336,7 @@ app.main = {
 		});
 		
 		//power up Grow
-		if (Math.random() < this.POWER_SIZE_PROBABILITY_PER_SECOND/60)
+		if (Math.random() < this.POWER_SIZE_PROBABILITY_PER_SECOND/120)
 		{
 			
 			this.size_powerups.push(new app.power_size(this.WIDTH, this.HEIGHT));
@@ -353,7 +353,7 @@ app.main = {
 		});
 		
 		
-		if (Math.random() < this.POWER_SPEED_PROBABILITY_PER_SECOND/60)
+		if (Math.random() < this.POWER_SPEED_PROBABILITY_PER_SECOND/120)
 		{
 			
 			this.speed_powerups.push(new app.power_speed(this.WIDTH, this.HEIGHT));
@@ -370,7 +370,7 @@ app.main = {
 		});
 		
 			
-		if (Math.random() < this.POWER_WEIGHT_PROBABILITY_PER_SECOND/60)
+		if (Math.random() < this.POWER_WEIGHT_PROBABILITY_PER_SECOND/120)
 		{
 		
 			this.weight_powerups.push(new app.power_weight(this.WIDTH, this.HEIGHT));
@@ -386,7 +386,7 @@ app.main = {
 			power_weight.update(self.dt);
 		});
 		
-		if (Math.random() < this.POWER_ACCEL_PROBABILITY_PER_SECOND/60)
+		if (Math.random() < this.POWER_ACCEL_PROBABILITY_PER_SECOND/120)
 		{
 			
 			this.accel_powerups.push(new app.power_accel(this.WIDTH, this.HEIGHT));

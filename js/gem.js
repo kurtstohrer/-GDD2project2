@@ -4,6 +4,13 @@
 
 var app = app || {};
 
+function returnAbove(floatValue, min){
+	if(Math.abs(floatValue)<Math.abs(min)){
+		return floatValue * (min/floatValue);
+	}
+	return floatValue;
+}
+
 app.Gem = function()
 {
 	function Gem(width,height, gemImage)
@@ -11,8 +18,12 @@ app.Gem = function()
 		this.x = Math.random() * width;
 		this.y = Math.random() * height;
 		this.active = true;
-		this.xVelocity = Math.random() * 40 - 20; // added initial velocities
-		this.yVelocity = Math.random() * 30 - 15; // added initial velocities
+		this.xVelocity = Math.random() * 16 - 8; // added initial velocities
+		this.yVelocity = Math.random() * 9 - 4.5; // added initial velocities
+		
+		this.xVelocity = (this.xVelocity<0)? returnAbove(this.xVelocity,-2): (this.xVelocity>0)? returnAbove(this.xVelocity,2): 0;
+		this.yVelocity = (this.yVelocity<0)? returnAbove(this.yVelocity,-1): (this.yVelocity>0)? returnAbove(this.yVelocity,1): 0;
+		
 		this.velocityPlus;
 		this.radius = 10;
 		this.color = "#0F0";
@@ -21,9 +32,11 @@ app.Gem = function()
 		this.image = gemImage;
 		this.spriteSize = 20;
 		this.spriteCrop = 16
+		this.rotAngle = 0;
+		this.rotAmt = 60;
 		
 		//for animation
-		this.imgIndex = 0;
+		this.imgIndex = 1;
 		this.ticsPerFrame = 4;
 		this.tics = 0;
 		this.animating = false;
@@ -80,19 +93,21 @@ app.Gem = function()
 		var avgHead;
 		var avgDir = {x: 0, y: 0};
 		var avgDist;
-		if((distA<shipA.radius*5 + 50) && !(distB<shipB.radius*5 + 50)){
+		var aInRange = (distA<shipA.radius*5 + 50);
+		var bInRange = (distB<shipB.radius*5 + 50);
+		if(aInRange && !bInRange){
 			heading1 = {x: this.x-shipA.x, y: this.y-shipA.y};
 			avgHead = heading1;
 			direction1 = {x: heading1.x/distA,y: heading1.y/distA};
 			avgDir = direction1;
 		}
-		else if((distB<shipB.radius*5 + 50) && !(distA<shipA.radius*5 + 50)){
+		else if(bInRange && !aInRange){
 			heading2 = {x: this.x-shipB.x, y: this.y-shipB.y};
 			avgHead = heading2;
 			direction2 = {x: heading2.x/distB,y: heading2.y/distB};
 			avgDir = direction2;
 		}
-		else if((distA<shipA.radius*5 + 50) && (distB<shipB.radius*5 + 50)){
+		else if(aInRange && bInRange){
 			heading1 = {x: this.x-shipA.x, y: this.y-shipA.y};
 			heading2 = {x: this.x-shipB.x, y: this.y-shipB.y};
 			avgHead = averageVector(heading1,heading2);
@@ -105,6 +120,16 @@ app.Gem = function()
 		}
 
 		var mag = vectorMagnitude({x: this.xVelocity, y: this.yVelocity});
+		
+		if(aInRange || bInRange){
+			if(this.rotAmt < 150 && avgDir.x < 0){
+				this.rotAmt +=5;
+			}
+			else if (this.rotAmt > -150 && avgDir.x > 0){
+				this.rotAmt -=5;
+			}
+		}
+		
 		var newVector = {x: this.xVelocity-((0.1)*(mag*avgDir.x)), y: this.yVelocity-((0.1)*(mag*avgDir.y))};
 		newVector = multVector(normalizeVector(newVector),mag);
 		this.xVelocity = newVector.x;
@@ -144,14 +169,18 @@ app.Gem = function()
 		ctx.save();
 		
 		// BEGIN CHAD CODE
+		ctx.translate(this.x, this.y);
+		ctx.rotate(this.rotAngle * (Math.PI/180));
+		this.rotAngle += this.rotAmt * app.main.dt;
+		this.rotAngle = (this.rotAngle>360)? this.rotAngle-360: (this.rotAngle<-360)? this.rotAngle+360: this.rotAngle;
 		ctx.drawImage(
 			this.image, //image
 			(this.imgIndex*this.spriteCrop), //x of the sprite sheet
 			0, // y of the sprite sheet
 			this.spriteCrop, // width of the crop
 			this.spriteCrop, // height of the crop
-			this.x - (this.spriteSize/2), // x coord of where to draw
-			this.y - (this.spriteSize/2), // y coord of where to draw
+			-(this.spriteSize/2), // x coord of where to draw
+			-(this.spriteSize/2), // y coord of where to draw
 			this.spriteSize, // width to draw the image
 			this.spriteSize); // height to draw the image
 		// END CHAD CODE
@@ -176,10 +205,10 @@ app.Gem = function()
 			
 			// if we have reached the end of the sprite sheet
 			// if not, increment the imgIndex
-			if(this.imgIndex == 15)
+			if(this.imgIndex == 13)
 			{
 				// reset the counter, imgIndex and turn animating off
-				this.imgIndex = 0;
+				this.imgIndex = 1;
 				this.counter = 0;
 				this.animating = false;
 			}
