@@ -42,6 +42,7 @@ app.main = {
 	countDown: 60,
 	coolDown:60,
 	gameState: 1,
+	fps: 60,
 	
 	aspectRatio: undefined,
     
@@ -84,6 +85,8 @@ app.main = {
 		this.canvas.height = this.HEIGHT;
 		this.ctx = this.canvas.getContext('2d');
 		
+		this.ctx.textAlign = 'center';
+		
 		this.gameState = 1;
 		// BEGIN CHAD CODE		
 		//load images
@@ -91,10 +94,11 @@ app.main = {
 		this.shipImage = new Image();
 		this.shipbImage = new Image();
 		
-		this.gemImage.src = "img/base gem sheet.png";
+		this.gemImage.src = "img/base gem sheet contrasted.png";
 		this.shipImage.src = "img/player1ship.png";
 		this.shipbImage.src = "img/player2ship.png";
 		// END CHAD CODE
+			
 			
 		this.aspectRatio = this.WIDTH / this.HEIGHT;
 		// set up player ship
@@ -332,7 +336,7 @@ app.main = {
 		});
 		
 		//power up Grow
-		if (Math.random() < this.POWER_SIZE_PROBABILITY_PER_SECOND/60)
+		if (Math.random() < this.POWER_SIZE_PROBABILITY_PER_SECOND/120)
 		{
 			
 			this.size_powerups.push(new app.power_size(this.WIDTH, this.HEIGHT));
@@ -349,7 +353,7 @@ app.main = {
 		});
 		
 		
-		if (Math.random() < this.POWER_SPEED_PROBABILITY_PER_SECOND/60)
+		if (Math.random() < this.POWER_SPEED_PROBABILITY_PER_SECOND/120)
 		{
 			
 			this.speed_powerups.push(new app.power_speed(this.WIDTH, this.HEIGHT));
@@ -366,7 +370,7 @@ app.main = {
 		});
 		
 			
-		if (Math.random() < this.POWER_WEIGHT_PROBABILITY_PER_SECOND/60)
+		if (Math.random() < this.POWER_WEIGHT_PROBABILITY_PER_SECOND/120)
 		{
 		
 			this.weight_powerups.push(new app.power_weight(this.WIDTH, this.HEIGHT));
@@ -382,7 +386,7 @@ app.main = {
 			power_weight.update(self.dt);
 		});
 		
-		if (Math.random() < this.POWER_ACCEL_PROBABILITY_PER_SECOND/60)
+		if (Math.random() < this.POWER_ACCEL_PROBABILITY_PER_SECOND/120)
 		{
 			
 			this.accel_powerups.push(new app.power_accel(this.WIDTH, this.HEIGHT));
@@ -441,15 +445,15 @@ app.main = {
 			{
 				size.active = false;
 				
-				self.ship.spriteSize += .5;
-				self.ship.radius += .25;
+				self.ship.spriteSize += 5;
+				self.ship.radius += 2.5;
 				
 			}
 			if (self.collides(size, self.shipb))
 			{
 				size.active = false;
-				self.shipb.spriteSize += .5;
-				self.shipb.radius += .25;
+				self.shipb.spriteSize += 5;
+				self.shipb.radius += 2.5;
 				
 				
 			}
@@ -527,9 +531,9 @@ app.main = {
 		if(this.gameState == 1)
 		{
 		
-			this.drawLib.text(this.ctx, "CRYSTALLINE COLLECTOR" , this.WIDTH/2 - 625, 300, 100, "white");
+			this.drawLib.text(this.ctx, "CRYSTALLINE COLLECTOR" , this.WIDTH/2, 300, 100, "white");
 			
-			this.drawLib.text(this.ctx, "[ PRESS ENTER TO START ]" , this.WIDTH/2 - 375, 700, 50, "white");
+			this.drawLib.text(this.ctx, "[ PRESS ENTER TO START ]" , this.WIDTH/2, 700, 50, "white");
 		
 		}
 		
@@ -560,14 +564,22 @@ app.main = {
 				power_accel.draw(self.ctx);
 			});
 			
-			this.drawLib.text(this.ctx, "" + this.scorea, 10, 20, 18, "blue");
-			this.drawLib.text(this.ctx, "" + this.scoreb, 10, 40, 18, "red");
+			this.drawLib.text(this.ctx, "" + this.scorea, this.ship.x+1, this.ship.y + 10.25, 30, "white");
+			this.drawLib.text(this.ctx, "" + this.scorea, this.ship.x-1, this.ship.y + 8.25, 30, "white");
+			this.drawLib.text(this.ctx, "" + this.scorea, this.ship.x-1, this.ship.y + 10.25, 30, "white");
+			this.drawLib.text(this.ctx, "" + this.scorea, this.ship.x+1, this.ship.y + 8.25, 30, "white");
+			this.drawLib.text(this.ctx, "" + this.scorea, this.ship.x, this.ship.y + 9.25, 30, "blue");
+			this.drawLib.text(this.ctx, "" + this.scoreb, this.shipb.x+1, this.shipb.y + 10.25, 30, "black");
+			this.drawLib.text(this.ctx, "" + this.scoreb, this.shipb.x-1, this.shipb.y + 8.25, 30, "black");
+			this.drawLib.text(this.ctx, "" + this.scoreb, this.shipb.x-1, this.shipb.y + 10.25, 30, "black");
+			this.drawLib.text(this.ctx, "" + this.scoreb, this.shipb.x+1, this.shipb.y + 8.25, 30, "black");
+			this.drawLib.text(this.ctx, "" + this.scoreb, this.shipb.x, this.shipb.y + 9.25, 30, "red");
 			
 			if(this.countDown > 5){
-					this.drawLib.text(this.ctx, "" + this.countDown, this.WIDTH/2 - 20, this.HEIGHT- 10, 40, "white");
+					this.drawLib.text(this.ctx, "" + this.countDown, this.WIDTH/2, this.HEIGHT- 10, 40, "white");
 			}
 			if(this.countDown <= 5){
-					this.drawLib.outlinedText(this.ctx, "" + this.countDown, this.WIDTH/2 - 100, this.HEIGHT/2 +100, 300, "#FFBF00","white");
+					this.drawLib.outlinedText(this.ctx, "" + this.countDown, this.WIDTH/2, this.HEIGHT/2 +100, 300, "#FFBF00","white");
 			}
 		}
 		
@@ -576,19 +588,19 @@ app.main = {
 				
 					
 					if(this.scorea > this.scoreb){
-							this.drawLib.text(this.ctx, "WINNER" , this.WIDTH/2 - 200, 300, 100, "white");
-							this.drawLib.text(this.ctx, "Blue Ship!" , this.WIDTH/2 - 175, 350, 50, "blue");
+							this.drawLib.text(this.ctx, "WINNER" , this.WIDTH/2, 300, 100, "white");
+							this.drawLib.text(this.ctx, "Blue Ship!" , this.WIDTH/2, 350, 50, "blue");
 						}
 					if(this.scoreb > this.scorea){
-						this.drawLib.text(this.ctx, "WINNER" , this.WIDTH/2 - 200, 300, 100, "white");
-						this.drawLib.text(this.ctx, "Red Ship! " , this.WIDTH/2 - 160, 350, 50, "red");
+						this.drawLib.text(this.ctx, "WINNER" , this.WIDTH/2, 300, 100, "white");
+						this.drawLib.text(this.ctx, "Red Ship! " , this.WIDTH/2, 350, 50, "red");
 					}
 					if(this.scoreb == this.scorea){
 					
-						this.drawLib.text(this.ctx, "DRAW" , this.WIDTH/2 - 150, 300, 100, "white");
+						this.drawLib.text(this.ctx, "DRAW" , this.WIDTH/2, 300, 100, "white");
 					}
 					
-				this.drawLib.text(this.ctx, "[ PRESS ENTER TO PLAY AGAIN ]" , this.WIDTH/2 - 450, 700, 50, "white");
+				this.drawLib.text(this.ctx, "[ PRESS ENTER TO PLAY AGAIN ]" , this.WIDTH/2, 700, 50, "white");
 		
 		}
 	},
@@ -597,33 +609,37 @@ app.main = {
 	elapsed: 0,
 	update: function(){
 	
-		requestAnimationFrame(this.update.bind(this));
-		this.elapsed = Date.now()-this.start;
-		this.start = Date.now();
+		var self = this;
 		
-		this.drawLib.clear(this.ctx,0,0,this.WIDTH, this.HEIGHT);
+		setTimeout(function()
+		{
+			requestAnimationFrame(self.update.bind(self));
+			self.elapsed = Date.now()-self.start;
+			self.start = Date.now();
 		
-		this.menuControls();
+			self.drawLib.clear(self.ctx,0,0,self.WIDTH, self.HEIGHT);
+		
+			self.menuControls();
 		
 		
-		if(this.gameState == 2){
+			if(self.gameState == 2){
 		
-			this.crystals(); 
+				self.crystals(); 
 			
-			this.moveSprites();
+				self.moveSprites();
+				
+				self.checkCollisions();
 			
-			this.checkCollisions();
+				self.timer();
 			
-			this.timer();
-			
-			if(this.countDown <= 0){
-			this.gameState =3;
+				if(self.countDown <= 0){
+				self.gameState =3;
 		
+				}	
 			}
-		}
 		
-		this.draw();
-		
+			self.draw();
+		}, 1000 / self.fps);
 		
 		
 		
