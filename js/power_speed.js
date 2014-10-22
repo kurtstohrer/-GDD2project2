@@ -13,7 +13,7 @@ app.power_speed = function()
 		this.active = true;
 		this.xVelocity = 0;
 		this.yVelocity = 0;
-		this.radius = 20;
+		this.radius = 15;
 		this.color = "#1804CF";
 		
 		//image
@@ -62,12 +62,6 @@ app.power_speed = function()
 		// END CHAD CODE
 		
 		ctx.save();
-		
-		ctx.fillStyle = this.color;
-		ctx.beginPath();
-		ctx.arc(this.x, this.y, this.radius*2 / 3, 0, Math.PI * 2);
-		ctx.closePath();
-		ctx.fill()
 		
 		ctx.translate(this.x, this.y);
 		// BEGIN CHAD CODE

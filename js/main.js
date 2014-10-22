@@ -19,10 +19,10 @@ app.main = {
 	dt: 1/60.0,
 	
 	GEM_PROBABILITY_PER_SECOND: 1.5,
-	POWER_SIZE_PROBABILITY_PER_SECOND: 0.05,
-	POWER_SPEED_PROBABILITY_PER_SECOND: 0.10,
-	POWER_WEIGHT_PROBABILITY_PER_SECOND: 0.20,
-	POWER_ACCEL_PROBABILITY_PER_SECOND: 0.10,
+	POWER_SIZE_PROBABILITY_PER_SECOND: .086,
+	POWER_SPEED_PROBABILITY_PER_SECOND: 0.09,
+	POWER_WEIGHT_PROBABILITY_PER_SECOND: 0.09,
+	POWER_ACCEL_PROBABILITY_PER_SECOND: 0.09,
     canvas: undefined,
     ctx: undefined,
     ship: undefined,
@@ -55,6 +55,7 @@ app.main = {
 		music.loop = true;
 		title.loop = true;
 		title.play();
+		
 		var keys = {};
 		window.addEventListener("keydown",function(e)
 		{
@@ -86,8 +87,6 @@ app.main = {
 		this.ctx = this.canvas.getContext('2d');
 		
 		this.ctx.textAlign = 'center';
-		
-		this.gameState = 1;
 		// BEGIN CHAD CODE		
 		//load images
 		this.gemImage = new Image();
@@ -126,21 +125,23 @@ app.main = {
 	
 		if(app.keydown[app.KEYBOARD.KEY_ENTER])
 		{
-			if(this.gameState ==1){
+			if(this.gameState == 1){
 				this.gameState = 2;
-				title.loop=false;
+				title.loop = false;
 				title.pause();
 				music.volume = 0.2;
 				music.play();
 			}
-			if(this.gameState ==3){
-				location.reload();
+			if(this.gameState == 3){
 				music.pause();
+				location.reload();
+				this.gamestate = 2;
 			}
 		}
 	
 	
 	},
+	
 	moveSprites: function()
 	{
 		var randX = (this.AIACTIVE)? Math.random(): 0;                       // random walk
@@ -608,7 +609,7 @@ app.main = {
 						this.drawLib.text(this.ctx, "DRAW" , this.WIDTH/2, 300, 100, "white");
 					}
 					
-				this.drawLib.text(this.ctx, "[ PRESS ENTER TO PLAY AGAIN ]" , this.WIDTH/2, 700, 50, "white");
+				this.drawLib.text(this.ctx, "[ PRESS ENTER TO RETURN TO MAIN MENU ]" , this.WIDTH/2, 700, 50, "white");
 		
 		}
 	},
