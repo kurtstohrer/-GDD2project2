@@ -51,7 +51,6 @@ app.Gem = function()
 	
 	p.update = function(dt)
 	{
-		
 		// BEGIN FORREST CODE -- The Wicked Awesome that is Argzero's code
 		/// <summary>
 		/// determines the closest ship to this gem in range of this gem if there is one
@@ -143,7 +142,6 @@ app.Gem = function()
 		
 		this.x += (this.xVelocity * (this.velocityPlus)) * dt * app.main.elapsed/10;
 		this.y += (this.yVelocity * (this.velocityPlus)) * dt * app.main.elapsed/10;
-	
 	};
 	
 	p.draw = function(ctx)

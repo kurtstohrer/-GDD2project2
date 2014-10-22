@@ -22,6 +22,7 @@ app.KEYBOARD = {
 	"KEY_S": 83,
 	"KEY_D": 68,
 	"KEY_ENTER": 13,
+	"KEY_L": 76,
 
 	
 };
