@@ -18,11 +18,11 @@ app.main = {
     HEIGHT: 1080,
 	dt: 1/60.0,
 	
-	GEM_PROBABILITY_PER_SECOND: 1.0,
-	POWER_SIZE_PROBABILITY_PER_SECOND: 0.3,
-	POWER_SPEED_PROBABILITY_PER_SECOND: 0.3,
-	POWER_WEIGHT_PROBABILITY_PER_SECOND: 0.3,
-	POWER_ACCEL_PROBABILITY_PER_SECOND: 0.3,
+	GEM_PROBABILITY_PER_SECOND: 1.5,
+	POWER_SIZE_PROBABILITY_PER_SECOND: 0.05,
+	POWER_SPEED_PROBABILITY_PER_SECOND: 0.10,
+	POWER_WEIGHT_PROBABILITY_PER_SECOND: 0.20,
+	POWER_ACCEL_PROBABILITY_PER_SECOND: 0.10,
     canvas: undefined,
     ctx: undefined,
     ship: undefined,
@@ -39,7 +39,7 @@ app.main = {
 	scoreb: 0,
 	friction: 15,
 	
-	countDown: 60,
+	countDown: 120,
 	coolDown:60,
 	gameState: 1,
 	fps: 60,
@@ -93,10 +93,18 @@ app.main = {
 		this.gemImage = new Image();
 		this.shipImage = new Image();
 		this.shipbImage = new Image();
+		this.speedImage = new Image();
+		this.sizeImage = new Image();
+		this.weightImage = new Image();
+		this.accelImage = new Image();
 		
 		this.gemImage.src = "img/base gem sheet contrasted.png";
 		this.shipImage.src = "img/player1ship.png";
 		this.shipbImage.src = "img/player2ship.png";
+		this.speedImage.src = "img/speedup.png";
+		this.sizeImage.src = "img/sizeupv2.png";
+		this.weightImage.src = "img/weightup.png";
+		this.accelImage.src = "img/Acccelupv2.png";
 		// END CHAD CODE
 			
 			
@@ -320,7 +328,7 @@ app.main = {
 	{
 		var self = this;
 		//GEMS
-		if (Math.random() < this.GEM_PROBABILITY_PER_SECOND/30)
+		if (Math.random() < this.GEM_PROBABILITY_PER_SECOND/60)
 		{
 			//console.log(this.gems);
 			this.gems.push(new app.Gem(this.WIDTH, this.HEIGHT, this.gemImage));
@@ -335,11 +343,10 @@ app.main = {
 			gem.update(self.dt);
 		});
 		
-		//power up Grow
-		if (Math.random() < this.POWER_SIZE_PROBABILITY_PER_SECOND/120)
+		//power up Size
+		if (Math.random() < this.POWER_SIZE_PROBABILITY_PER_SECOND/60)
 		{
-			
-			this.size_powerups.push(new app.power_size(this.WIDTH, this.HEIGHT));
+			this.size_powerups.push(new app.power_size(this.WIDTH, this.HEIGHT, this.sizeImage));
 			
 		}
 		this.size_powerups = this.size_powerups.filter(function(power_size)
@@ -352,11 +359,11 @@ app.main = {
 			power_size.update(self.dt);
 		});
 		
-		
-		if (Math.random() < this.POWER_SPEED_PROBABILITY_PER_SECOND/120)
+		//power up Speed
+		if (Math.random() < this.POWER_SPEED_PROBABILITY_PER_SECOND/60)
 		{
 			
-			this.speed_powerups.push(new app.power_speed(this.WIDTH, this.HEIGHT));
+			this.speed_powerups.push(new app.power_speed(this.WIDTH, this.HEIGHT, this.speedImage));
 			
 		}
 		this.speed_powerups = this.speed_powerups.filter(function(power_speed)
@@ -369,11 +376,11 @@ app.main = {
 			power_speed.update(self.dt);
 		});
 		
-			
-		if (Math.random() < this.POWER_WEIGHT_PROBABILITY_PER_SECOND/120)
+		//power up Weight
+		if (Math.random() < this.POWER_WEIGHT_PROBABILITY_PER_SECOND/60)
 		{
 		
-			this.weight_powerups.push(new app.power_weight(this.WIDTH, this.HEIGHT));
+			this.weight_powerups.push(new app.power_weight(this.WIDTH, this.HEIGHT, this.weightImage));
 			
 		}
 		this.weight_powerups = this.weight_powerups.filter(function(power_weight)
@@ -386,10 +393,11 @@ app.main = {
 			power_weight.update(self.dt);
 		});
 		
-		if (Math.random() < this.POWER_ACCEL_PROBABILITY_PER_SECOND/120)
+		//power up Accel
+		if (Math.random() < this.POWER_ACCEL_PROBABILITY_PER_SECOND/60)
 		{
 			
-			this.accel_powerups.push(new app.power_accel(this.WIDTH, this.HEIGHT));
+			this.accel_powerups.push(new app.power_accel(this.WIDTH, this.HEIGHT, this.accelImage));
 			
 		}
 		this.accel_powerups = this.accel_powerups.filter(function(power_accel)
@@ -463,12 +471,12 @@ app.main = {
 			if (self.collides(speed, self.ship))
 			{
 				speed.active = false;
-				self.ship.maxVelocity ++;
+				self.ship.maxVelocity += 1.5;
 			}
 			if (self.collides(speed, self.shipb))
 			{
 				speed.active = false;
-				self.shipb.maxVelocity ++;
+				self.shipb.maxVelocity += 1.5;
 				
 			}
 		});
@@ -491,12 +499,12 @@ app.main = {
 			if (self.collides(accel, self.ship))
 			{
 				accel.active = false;
-				self.ship.speed ++;
+				self.ship.speed += 2;
 			}
 			if (self.collides(accel, self.shipb))
 			{
 				accel.active = false;
-				self.shipb.speed ++;
+				self.shipb.speed += 2;
 				
 			}
 		});

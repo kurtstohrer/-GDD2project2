@@ -186,7 +186,6 @@ app.Gem = function()
 		// END CHAD CODE
 			
 		ctx.restore();
-		//console.log("drawing gem:" + this.x + " " + this.y);
 	};
 	
 	// BEGIN CHAD CODE
