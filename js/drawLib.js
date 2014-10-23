@@ -41,11 +41,7 @@ app.drawLib = {
 	backgroundGradient : function(ctx, width, height)
 	{
 		ctx.save();
-		var grad = ctx.createLinearGradient(0,0,0,height);
-		grad.addColorStop(0,"#888");
-		grad.addColorStop(1,"black");
-		
-		ctx.fillStyle = "black";
+		ctx.fillStyle = "rgba(0.0,0.0,0.0,0.0)";
 		ctx.fillRect(0,0,width,height) //what's the point of the rect function if we're just going to do this?
 		ctx.restore();
 	}

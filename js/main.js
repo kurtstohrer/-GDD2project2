@@ -99,6 +99,7 @@ app.main = {
 		this.sizeImage = new Image();
 		this.weightImage = new Image();
 		this.accelImage = new Image();
+		this.backgroundImg = new Image();
 		
 		this.gemImage.src = "img/base gem sheet contrasted.png";
 		this.shipImage.src = "img/player1ship.png";
@@ -107,6 +108,7 @@ app.main = {
 		this.sizeImage.src = "img/sizeupv2.png";
 		this.weightImage.src = "img/weightup.png";
 		this.accelImage.src = "img/Acccelupv2.png";
+		this.backgroundImg.src = "img/Static background2.png";
 		// END CHAD CODE
 			
 			
@@ -495,6 +497,17 @@ app.main = {
 			this.ship.yVelocity = yVel - yBounce * this.shipb.weight / this.ship.weight;
 			this.shipb.xVelocity = xVel + xBounce * this.ship.weight / this.shipb.weight;
 			this.shipb.yVelocity = yVel + yBounce* this.ship.weight / this.shipb.weight;
+			
+			while(this.collides(this.ship, this.shipb))
+			{
+				var xDiff = this.ship.x - this.shipb.x;
+				var yDiff = this.ship.y - this.shipb.y;
+				
+				this.ship.x += xDiff * 0.01;
+				this.ship.y += yDiff * 0.01;
+				this.shipb.x -= xDiff * 0.01;
+				this.shipb.y -= yDiff * 0.01;
+			}
 		}	
 
 		this.gems.forEach(function(gem)
@@ -638,8 +651,9 @@ app.main = {
 	draw: function(){
 		
 		var self = this;
-	
-		this.drawLib.backgroundGradient(this.ctx, this.WIDTH, this.HEIGHT);
+		
+		this.ctx.drawImage(this.backgroundImg, 0, 0);
+		//this.drawLib.backgroundGradient(this.ctx, this.WIDTH, this.HEIGHT);
 		
 		if(this.gameState == 1)
 		{
