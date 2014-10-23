@@ -63,12 +63,6 @@ app.power_weight = function()
 		
 		ctx.save();
 		
-		ctx.fillStyle = this.color;
-		ctx.beginPath();
-		ctx.arc(this.x, this.y, this.radius*2 / 3, 0, Math.PI * 2);
-		ctx.closePath();
-		ctx.fill()
-		
 		ctx.translate(this.x, this.y);
 		// BEGIN CHAD CODE
 		ctx.drawImage(
