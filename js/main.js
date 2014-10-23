@@ -18,11 +18,11 @@ app.main = {
     HEIGHT: 1080,
 	dt: 1/60.0,
 	
-	GEM_PROBABILITY_PER_SECOND: 1.0,
-	POWER_SIZE_PROBABILITY_PER_SECOND: 0.3,
-	POWER_SPEED_PROBABILITY_PER_SECOND: 0.3,
-	POWER_WEIGHT_PROBABILITY_PER_SECOND: 0.3,
-	POWER_ACCEL_PROBABILITY_PER_SECOND: 0.3,
+	GEM_PROBABILITY_PER_SECOND: 1.5,
+	POWER_SIZE_PROBABILITY_PER_SECOND: 0.086,
+	POWER_SPEED_PROBABILITY_PER_SECOND: 0.09,
+	POWER_WEIGHT_PROBABILITY_PER_SECOND: 0.09,
+	POWER_ACCEL_PROBABILITY_PER_SECOND: 0.09,
     canvas: undefined,
     ctx: undefined,
     ship: undefined,
@@ -39,9 +39,10 @@ app.main = {
 	scoreb: 0,
 	friction: 15,
 	
-	countDown: 60,
+	countDown: 120,
 	coolDown:60,
 	gameState: 1,
+	learnState: 1,
 	fps: 60,
 	
 	aspectRatio: undefined,
@@ -88,15 +89,24 @@ app.main = {
 		this.ctx.textAlign = 'center';
 		
 		this.gameState = 1;
+		this.learnState =1;
 		// BEGIN CHAD CODE		
 		//load images
 		this.gemImage = new Image();
 		this.shipImage = new Image();
 		this.shipbImage = new Image();
+		this.speedImage = new Image();
+		this.sizeImage = new Image();
+		this.weightImage = new Image();
+		this.accelImage = new Image();
 		
-		this.gemImage.src = "img/base gem sheet.png";
+		this.gemImage.src = "img/base gem sheet contrasted.png";
 		this.shipImage.src = "img/player1ship.png";
 		this.shipbImage.src = "img/player2ship.png";
+		this.speedImage.src = "img/speedup.png";
+		this.sizeImage.src = "img/sizeupv2.png";
+		this.weightImage.src = "img/weightup.png";
+		this.accelImage.src = "img/Acccelupv2.png";
 		// END CHAD CODE
 			
 			
@@ -129,6 +139,15 @@ app.main = {
 				location.reload();
 				music.pause();
 			}
+		}
+		if(app.keydown[app.KEYBOARD.KEY_L])
+		{
+			if(this.gameState ==1){
+			
+				this.gameState = 4;
+				
+			}
+			
 		}
 	
 	
@@ -320,10 +339,25 @@ app.main = {
 	{
 		var self = this;
 		//GEMS
-		if (Math.random() < this.GEM_PROBABILITY_PER_SECOND/30)
+		if (Math.random() < this.GEM_PROBABILITY_PER_SECOND/60)
 		{
 			//console.log(this.gems);
-			this.gems.push(new app.Gem(this.WIDTH, this.HEIGHT, this.gemImage));
+			if(this.gameState == 2){
+				this.gems.push(new app.Gem(this.WIDTH, this.HEIGHT, this.gemImage));
+			
+			}
+			if(this.gameState == 4){
+			
+				if(this.learnState == 1 ){
+					if(this.gems.length < 1){
+						this.gems.push(new app.Gem(this.WIDTH, this.HEIGHT, this.gemImage));
+						}
+				
+				}
+				if(this.learnState == 6){
+					this.gems.push(new app.Gem(this.WIDTH, this.HEIGHT, this.gemImage));
+				}
+			}
 			//console.log("new gem " + xpos + " " + ypos);
 		}
 		this.gems = this.gems.filter(function(gem)
@@ -335,12 +369,23 @@ app.main = {
 			gem.update(self.dt);
 		});
 		
-		//power up Grow
+		//power up Size
 		if (Math.random() < this.POWER_SIZE_PROBABILITY_PER_SECOND/60)
 		{
+				if(this.gameState == 2){
 			
-			this.size_powerups.push(new app.power_size(this.WIDTH, this.HEIGHT));
-			
+					this.size_powerups.push(new app.power_size(this.WIDTH, this.HEIGHT, this.sizeImage));
+				
+				}
+				if(this.gameState == 4){
+						if(this.learnState == 2){
+							if(this.size_powerups.length < 1){
+								this.size_powerups.push(new app.power_size(this.WIDTH, this.HEIGHT, this.sizeImage));
+							
+							}
+						}
+				
+				}
 		}
 		this.size_powerups = this.size_powerups.filter(function(power_size)
 		{
@@ -352,12 +397,21 @@ app.main = {
 			power_size.update(self.dt);
 		});
 		
-		
+		//power up Speed
 		if (Math.random() < this.POWER_SPEED_PROBABILITY_PER_SECOND/60)
 		{
-			
-			this.speed_powerups.push(new app.power_speed(this.WIDTH, this.HEIGHT));
-			
+				if(this.gameState == 2){
+					this.speed_powerups.push(new app.power_speed(this.WIDTH, this.HEIGHT, this.speedImage));
+				}
+				if(this.gameState == 4){
+						if(this.learnState == 3){
+							if(this.speed_powerups < 1 ){
+								this.speed_powerups.push(new app.power_speed(this.WIDTH, this.HEIGHT, this.speedImage));
+							}
+						
+						}
+				
+				}
 		}
 		this.speed_powerups = this.speed_powerups.filter(function(power_speed)
 		{
@@ -369,12 +423,21 @@ app.main = {
 			power_speed.update(self.dt);
 		});
 		
-			
+		//power up Weight
 		if (Math.random() < this.POWER_WEIGHT_PROBABILITY_PER_SECOND/60)
 		{
-		
-			this.weight_powerups.push(new app.power_weight(this.WIDTH, this.HEIGHT));
-			
+			if(this.gameState == 2){
+				this.weight_powerups.push(new app.power_weight(this.WIDTH, this.HEIGHT, this.weightImage));
+			}
+			if(this.gameState == 4){
+						if(this.learnState == 4){
+						if(this.weight_powerups.length < 1){
+							this.weight_powerups.push(new app.power_weight(this.WIDTH, this.HEIGHT, this.weightImage));
+						}
+						
+						}
+				
+				}
 		}
 		this.weight_powerups = this.weight_powerups.filter(function(power_weight)
 		{
@@ -386,11 +449,21 @@ app.main = {
 			power_weight.update(self.dt);
 		});
 		
+		//power up Accel
 		if (Math.random() < this.POWER_ACCEL_PROBABILITY_PER_SECOND/60)
 		{
-			
-			this.accel_powerups.push(new app.power_accel(this.WIDTH, this.HEIGHT));
-			
+			if(this.gameState == 2){
+					this.accel_powerups.push(new app.power_accel(this.WIDTH, this.HEIGHT, this.accelImage));
+			}
+			if(this.gameState == 4){
+						if(this.learnState == 5){
+						if(this.accel_powerups.length < 1){
+							this.accel_powerups.push(new app.power_accel(this.WIDTH, this.HEIGHT, this.accelImage));
+						}
+						
+						}
+				
+				}
 		}
 		this.accel_powerups = this.accel_powerups.filter(function(power_accel)
 		{
@@ -430,11 +503,31 @@ app.main = {
 			{
 				gem.active = false;
 				self.scorea += 1;
+				if(self.gameState ==4){
+					
+					if(self.learnState == 1){
+						self.learnState = 2; 
+					}
+					if(self.learnState == 6){
+						location.reload();
+					}
+				
+				}
 			}
 			if (self.collides(gem, self.shipb))
 			{
 				gem.active = false;
 				self.scoreb += 1;
+				if(self.gameState ==4){
+					
+					if(self.learnState == 1){
+						self.learnState = 2; 
+					}
+					if(self.learnState == 6){
+						location.reload();
+					}
+				
+				}
 			}
 		});
 		
@@ -447,6 +540,9 @@ app.main = {
 				
 				self.ship.spriteSize += 5;
 				self.ship.radius += 2.5;
+				if(self.gameState ==4){
+					self.learnState = 3;
+				}
 				
 			}
 			if (self.collides(size, self.shipb))
@@ -454,7 +550,9 @@ app.main = {
 				size.active = false;
 				self.shipb.spriteSize += 5;
 				self.shipb.radius += 2.5;
-				
+				if(self.gameState ==4){
+					self.learnState = 3;
+				}
 				
 			}
 		});
@@ -463,13 +561,18 @@ app.main = {
 			if (self.collides(speed, self.ship))
 			{
 				speed.active = false;
-				self.ship.maxVelocity ++;
+				self.ship.maxVelocity += 1.5;
+				if(self.gameState ==4){
+					self.learnState = 4;
+				}
 			}
 			if (self.collides(speed, self.shipb))
 			{
 				speed.active = false;
-				self.shipb.maxVelocity ++;
-				
+				self.shipb.maxVelocity += 1.5;
+				if(self.gameState ==4){
+					self.learnState = 4;
+				}
 			}
 		});
 		this.weight_powerups.forEach(function(weight)
@@ -478,12 +581,17 @@ app.main = {
 			{
 				weight.active = false;
 				self.ship.weight ++;
+				if(self.gameState ==4){
+					self.learnState = 5;
+				}
 			}
 			if (self.collides(weight, self.shipb))
 			{
 				weight.active = false;
 				self.shipb.weight ++;
-				
+				if(self.gameState ==4){
+					self.learnState = 5;
+				}
 			}
 		});
 		this.accel_powerups.forEach(function(accel)
@@ -491,13 +599,18 @@ app.main = {
 			if (self.collides(accel, self.ship))
 			{
 				accel.active = false;
-				self.ship.speed ++;
+				self.ship.speed += 2;
+				if(self.gameState ==4){
+					self.learnState = 6;
+				}
 			}
 			if (self.collides(accel, self.shipb))
 			{
 				accel.active = false;
-				self.shipb.speed ++;
-				
+				self.shipb.speed += 2;
+				if(self.gameState ==4){
+					self.learnState = 6;
+				}
 			}
 		});
 		
@@ -534,6 +647,7 @@ app.main = {
 			this.drawLib.text(this.ctx, "CRYSTALLINE COLLECTOR" , this.WIDTH/2, 300, 100, "white");
 			
 			this.drawLib.text(this.ctx, "[ PRESS ENTER TO START ]" , this.WIDTH/2, 700, 50, "white");
+			this.drawLib.text(this.ctx, "[ PRESS L TO LEARN TO PLAY ]" , this.WIDTH/2, 900, 50, "white");
 		
 		}
 		
@@ -603,12 +717,71 @@ app.main = {
 				this.drawLib.text(this.ctx, "[ PRESS ENTER TO PLAY AGAIN ]" , this.WIDTH/2, 700, 50, "white");
 		
 		}
+		
+		
+		if(this.gameState == 4){
+		
+			this.ship.draw(this.ctx);
+			this.shipb.draw(this.ctx);
+			if(this.learnState == 1){
+			
+			
+			
+					this.gems.forEach(function(gem)
+					{
+							gem.draw(self.ctx);
+					});
+				this.drawLib.text(this.ctx, "Collect these Crystals to gain points!" , this.WIDTH/2, 40, 30, "white");
+			
+			}
+			if(this.learnState == 2){
+				
+					this.size_powerups.forEach(function(power_size)
+					{
+							power_size.draw(self.ctx);
+					});
+				this.drawLib.text(this.ctx, "Collect these to Grow larger and collect Crystals easier!" , this.WIDTH/2, 40, 30, "white");
+			}
+			if(this.learnState == 3){
+				
+					this.speed_powerups.forEach(function(power_speed){
+			
+					power_speed.draw(self.ctx);
+				});
+				this.drawLib.text(this.ctx, "Collect these to increase top Speed!" , this.WIDTH/2, 40, 30, "white");
+			}
+			if(this.learnState == 4){
+				
+				this.weight_powerups.forEach(function(power_weight){
+			
+					power_weight.draw(self.ctx);
+				});
+				this.drawLib.text(this.ctx, "Collect these to increase your Weight and Make the other player go further when you collide!" , this.WIDTH/2, 40, 30, "white");
+			}
+			if(this.learnState == 5){
+				
+				this.accel_powerups.forEach(function(power_accel){
+			
+					power_accel.draw(self.ctx);
+				});
+				this.drawLib.text(this.ctx, "Collect these to increase your Acceleration!" , this.WIDTH/2, 40, 30, "white");
+			}
+			if(this.learnState == 6){
+				
+				this.gems.forEach(function(gem)
+					{
+							gem.draw(self.ctx);
+					});
+				this.drawLib.text(this.ctx, "Now collect a Crystal to return to the home menu!" , this.WIDTH/2, 40, 30, "white");
+			}
+		
+		}
 	},
 	
 	start: Date.now(),
 	elapsed: 0,
 	update: function(){
-	
+		//console.log(this.gems.length);
 		var self = this;
 		
 		setTimeout(function()
@@ -637,6 +810,19 @@ app.main = {
 		
 				}	
 			}
+			if(self.gameState == 4){
+				
+				self.GEM_PROBABILITY_PER_SECOND= 2.0;
+				self.POWER_SIZE_PROBABILITY_PER_SECOND = 2.0;
+				self.POWER_SPEED_PROBABILITY_PER_SECOND = 2.0;
+				self.POWER_WEIGHT_PROBABILITY_PER_SECOND = 2.0;
+				self.POWER_ACCEL_PROBABILITY_PER_SECOND = 2.0;
+			
+				self.moveSprites();
+				self.crystals(); 
+				self.checkCollisions();
+			}
+			
 		
 			self.draw();
 		}, 1000 / self.fps);
