@@ -139,9 +139,14 @@ app.Gem = function()
 		// *
 		// END FORREST CODE
 		
-		
+		if(app.main.gameState == 2){
 		this.x += (this.xVelocity * (this.velocityPlus)) * dt * app.main.elapsed/10;
 		this.y += (this.yVelocity * (this.velocityPlus)) * dt * app.main.elapsed/10;
+		}
+		else{
+		
+		
+		}
 	};
 	
 	p.draw = function(ctx)
