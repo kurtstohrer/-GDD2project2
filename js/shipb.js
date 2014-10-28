@@ -34,6 +34,13 @@ app.shipb = {
 		
 		this.image = shipImage;
 	},
+	update: function(){
+		if(app.main.gameState == 3){
+			this.x = app.main.WIDTH /2 - 600;
+			this.y = 200;
+			
+		}
+	},
 	
 	moveLeft: function(dt)
 	{

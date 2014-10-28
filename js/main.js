@@ -15,7 +15,7 @@ var title;
 app.main = {
 	// CONSTANT properties
     WIDTH : 1920 ,
-    HEIGHT: 1080,
+    HEIGHT: 1080, 
 	dt: 1/60.0,
 	
 	GEM_PROBABILITY_PER_SECOND: 0.75,
@@ -747,8 +747,39 @@ app.main = {
 					
 						this.drawLib.text(this.ctx, "DRAW" , this.WIDTH/2, 300, 100, "white");
 					}
+					this.ship.draw(this.ctx);
+					this.shipb.draw(this.ctx);
+					//player 1 stats
+					this.drawLib.text(this.ctx, "Crystals:  " + this.scorea , this.WIDTH - 400, 350, 40, "#13F059");
+					//size
+					this.drawLib.text(this.ctx, "Size:" , this.WIDTH - 390, 400, 40, "#8C00FF");
+					this.drawLib.rect(this.ctx, this.WIDTH - 320, 375,this.ship.spriteSize- 41 ,30,"#8C00FF");
+					//weight
+					this.drawLib.text(this.ctx, "Weight:" , this.WIDTH - 412, 450, 40, "#7D7D7D");
+					this.drawLib.rect(this.ctx, this.WIDTH - 320, 425,this.ship.weight- 4 ,30,"#7D7D7D");
+					//top speed
+					this.drawLib.text(this.ctx, "Top Speed:" , this.WIDTH - 445, 500, 40, "#1AEB28");
+					this.drawLib.rect(this.ctx, this.WIDTH - 320, 475,this.ship.maxVelocity- 9 ,30,"#1AEB28");
+					//acceleration
+					this.drawLib.text(this.ctx, "Acceleration:" , this.WIDTH - 478, 550, 40, "#EB6D1A");
+					this.drawLib.rect(this.ctx, this.WIDTH - 320, 525,this.ship.speed- 24 ,30,"#EB6D1A");
 					
-				this.drawLib.text(this.ctx, "[ PRESS ENTER TO PLAY AGAIN ]" , this.WIDTH/2, 700, 50, "white");
+					//player 2 stats
+					this.drawLib.text(this.ctx, "Crystals:  " + this.scorea , 300, 350, 40, "#13F059");
+					//size
+					this.drawLib.text(this.ctx, "Size:" , 310, 400, 40, "#8C00FF");
+					this.drawLib.rect(this.ctx,  380, 375,this.shipb.spriteSize- 41 ,30,"#8C00FF");
+					//weight
+					this.drawLib.text(this.ctx, "Weight:" , 288, 450, 40, "#7D7D7D");
+					this.drawLib.rect(this.ctx, 380, 425,this.shipb.weight- 4 ,30,"#7D7D7D");
+					//top speed
+					this.drawLib.text(this.ctx, "Top Speed:" , 254, 500, 40, "#1AEB28");
+					this.drawLib.rect(this.ctx, 380, 475,this.shipb.maxVelocity- 9 ,30,"#1AEB28");
+					//acceleration
+					this.drawLib.text(this.ctx, "Acceleration:" ,  222, 550, 40, "#EB6D1A");
+					this.drawLib.rect(this.ctx, 380, 525,this.shipb.speed- 24 ,30,"#EB6D1A");
+					
+				this.drawLib.text(this.ctx, "[ PRESS ENTER TO PLAY AGAIN ]" , this.WIDTH/2, this.HEIGHT - 50, 50, "white");
 		
 		}
 		
@@ -820,6 +851,7 @@ app.main = {
 		
 		setTimeout(function()
 		{
+			
 			requestAnimationFrame(self.update.bind(self));
 			self.elapsed = Date.now()-self.start;
 			self.start = Date.now();
@@ -828,7 +860,9 @@ app.main = {
 		
 			self.menuControls();
 		
-		
+			self.ship.update();
+			self.shipb.update();
+			
 			if(self.gameState == 2 || self.gameState == 5){
 		
 				self.crystals(); 
