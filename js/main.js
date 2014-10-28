@@ -163,7 +163,8 @@ app.main = {
 				title.pause();
 				music.volume = 0.2;
 				music.play();
-				self.GEM_PROBABILITY_PER_SECOND= 1.0;
+				this.GEM_PROBABILITY_PER_SECOND = 1.0;
+				this.POWER_SIZE_PROBABILITY_PER_SECOND = 0.06;
 			}
 		}
 	
