@@ -53,7 +53,9 @@ app.Gem = function()
 	{
 		// BEGIN FORREST CODE -- The Wicked Awesome that is Argzero's code
 		/// <summary>
-		/// determines the closest ship to this gem in range of this gem if there is one
+		/// determines 
+		
+		//the closest ship to this gem in range of this gem if there is one
 		/// </summary>
 		//*
 		var shipA, shipB;
@@ -146,8 +148,24 @@ app.Gem = function()
 		// END FORREST CODE
 		
 		if(app.main.gameState == 2){
-		this.x += (this.xVelocity * (this.velocityPlus)) * dt * app.main.elapsed/10;
-		this.y += (this.yVelocity * (this.velocityPlus)) * dt * app.main.elapsed/10;
+			this.x += (this.xVelocity * (this.velocityPlus)) * dt * app.main.elapsed/10;
+			this.y += (this.yVelocity * (this.velocityPlus)) * dt * app.main.elapsed/10;
+			if(this.x < 0 - this.radius)
+			{
+				this.x = app.main.WIDTH + this.radius;
+			}
+			if(this.x > app.main.WIDTH + this.radius)
+			{
+				this.x = 0 - this.radius;
+			}
+			if(this.y < 0 - this.radius)
+			{
+				this.y = app.main.HEIGHT + this.radius;
+			}
+			if(this.y > app.main.HEIGHT + this.radius)
+			{
+				this.y = 0 - this.radius;
+			}
 		}
 		else{
 		
