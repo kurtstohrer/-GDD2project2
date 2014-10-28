@@ -24,7 +24,7 @@ app.ship = {
 	spriteCrop: 32,
 	imgIndex: 0,
 	tics: 0,
-	ticsPerFrame: 4,
+	ticsPerFrame: 8,
 	drawLib: undefined,
 	weight: 5,
 	
