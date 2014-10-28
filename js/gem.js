@@ -54,8 +54,8 @@ app.Gem = function()
 		// BEGIN FORREST CODE -- The Wicked Awesome that is Argzero's code
 		/// <summary>
 		/// determines 
-		\
-		the closest ship to this gem in range of this gem if there is one
+		
+		//the closest ship to this gem in range of this gem if there is one
 		/// </summary>
 		//*
 		var shipA, shipB;
