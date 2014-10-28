@@ -652,7 +652,7 @@ app.main = {
 		
 		var self = this;
 		
-		this.ctx.drawImage(this.backgroundImg, 0, 0);
+		this.ctx.drawImage(this.backgroundImg, 0, 0, self.WIDTH, self.HEIGHT);
 		//this.drawLib.backgroundGradient(this.ctx, this.WIDTH, this.HEIGHT);
 		
 		if(this.gameState == 1)
