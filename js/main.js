@@ -765,7 +765,7 @@ app.main = {
 					this.drawLib.rect(this.ctx, this.WIDTH - 320, 525,this.ship.speed- 24 ,30,"#EB6D1A");
 					
 					//player 2 stats
-					this.drawLib.text(this.ctx, "Crystals:  " + this.scorea , 300, 350, 40, "#13F059");
+					this.drawLib.text(this.ctx, "Crystals:  " + this.scoreb , 300, 350, 40, "#13F059");
 					//size
 					this.drawLib.text(this.ctx, "Size:" , 310, 400, 40, "#8C00FF");
 					this.drawLib.rect(this.ctx,  380, 375,this.shipb.spriteSize- 41 ,30,"#8C00FF");
