@@ -85,7 +85,7 @@ app.Gem = function()
 		/// modifies velocity to head towards the nearest ship within range
 		/// </summary>
 		// *
-		if(this.velocityPlus < 10) { this.velocityPlus += 0.2; }
+		if(this.velocityPlus < 15) { this.velocityPlus += 0.2; }
 					
 		var heading1;
 		var direction1;
@@ -104,13 +104,14 @@ app.Gem = function()
 		if(aInRange && !bInRange){
 			heading1 = {x: this.x-shipA.x, y: this.y-shipA.y};
 			avgHead = heading1;
-			direction1 = {x: heading1.x*(shipA.weight/5)/distA,y: heading1.y*(shipA.weight*5)/distA};
+			direction1 = {x: heading1.x*(shipA.weight/2)/distA,y: heading1.y*(shipA.weight/2)/distA};
 			avgDir = direction1;
+			
 		}
 		else if(bInRange && !aInRange){
 			heading2 = {x: this.x-shipB.x, y: this.y-shipB.y};
 			avgHead = heading2;
-			direction2 = {x: heading2.x*(shipB.weight/5)/distB,y: heading2.y*(shipB.weight*5)/distB};
+			direction2 = {x: heading2.x*(shipB.weight/2)/distB,y: heading2.y*(shipB.weight/2)/distB};
 			avgDir = direction2;
 		}
 		else if(aInRange && bInRange){
@@ -147,7 +148,7 @@ app.Gem = function()
 		// *
 		// END FORREST CODE
 		
-		if(app.main.gameState == 2){
+		if(app.main.gameState == 2 || app.main.gameState == 5){
 			this.x += (this.xVelocity * (this.velocityPlus)) * dt * app.main.elapsed/10;
 			this.y += (this.yVelocity * (this.velocityPlus)) * dt * app.main.elapsed/10;
 			if(this.x < 0 - this.radius)

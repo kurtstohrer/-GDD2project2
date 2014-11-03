@@ -15,14 +15,14 @@ var title;
 app.main = {
 	// CONSTANT properties
     WIDTH : 1920 ,
-    HEIGHT: 1080,
+    HEIGHT: 1080, 
 	dt: 1/60.0,
 	
 	GEM_PROBABILITY_PER_SECOND: 0.75,
-	POWER_SIZE_PROBABILITY_PER_SECOND: 0.086,
-	POWER_SPEED_PROBABILITY_PER_SECOND: 0.09,
-	POWER_WEIGHT_PROBABILITY_PER_SECOND: 0.09,
-	POWER_ACCEL_PROBABILITY_PER_SECOND: 0.09,
+	POWER_SIZE_PROBABILITY_PER_SECOND: 0.043,
+	POWER_SPEED_PROBABILITY_PER_SECOND: 0.045,
+	POWER_WEIGHT_PROBABILITY_PER_SECOND: 0.045,
+	POWER_ACCEL_PROBABILITY_PER_SECOND: 0.045,
     canvas: undefined,
     ctx: undefined,
     ship: undefined,
@@ -44,6 +44,7 @@ app.main = {
 	gameState: 1,
 	learnState: 1,
 	fps: 60,
+	playState: 0,
 	
 	aspectRatio: undefined,
     
@@ -132,6 +133,7 @@ app.main = {
 		{
 			if(this.gameState ==1){
 				this.gameState = 2;
+				this.playState = 2;
 				title.loop=false;
 				title.pause();
 				music.volume = 0.2;
@@ -150,6 +152,20 @@ app.main = {
 				
 			}
 			
+		}
+		if(app.keydown[app.KEYBOARD.KEY_SPACE])
+		{
+			if(this.gameState ==1){
+			
+				this.gameState = 5;
+				this.playState = 5;
+				title.loop=false;
+				title.pause();
+				music.volume = 0.2;
+				music.play();
+				this.GEM_PROBABILITY_PER_SECOND = 1.0;
+				this.POWER_SIZE_PROBABILITY_PER_SECOND = 0.06;
+			}
 		}
 	
 	
@@ -344,7 +360,7 @@ app.main = {
 		if (Math.random() < this.GEM_PROBABILITY_PER_SECOND/60)
 		{
 			//console.log(this.gems);
-			if(this.gameState == 2){
+			if(this.gameState == 2 || this.gameState == 5){
 				this.gems.push(new app.Gem(this.WIDTH, this.HEIGHT, this.gemImage));
 			
 			}
@@ -374,7 +390,7 @@ app.main = {
 		//power up Size
 		if (Math.random() < this.POWER_SIZE_PROBABILITY_PER_SECOND/60)
 		{
-				if(this.gameState == 2){
+				if(this.gameState == 2 || this.gameState == 5){
 			
 					this.size_powerups.push(new app.power_size(this.WIDTH, this.HEIGHT, this.sizeImage));
 				
@@ -402,7 +418,7 @@ app.main = {
 		//power up Speed
 		if (Math.random() < this.POWER_SPEED_PROBABILITY_PER_SECOND/60)
 		{
-				if(this.gameState == 2){
+				if(this.gameState == 2 || this.gameState == 5){
 					this.speed_powerups.push(new app.power_speed(this.WIDTH, this.HEIGHT, this.speedImage));
 				}
 				if(this.gameState == 4){
@@ -428,7 +444,7 @@ app.main = {
 		//power up Weight
 		if (Math.random() < this.POWER_WEIGHT_PROBABILITY_PER_SECOND/60)
 		{
-			if(this.gameState == 2){
+			if(this.gameState == 2 || this.gameState == 5){
 				this.weight_powerups.push(new app.power_weight(this.WIDTH, this.HEIGHT, this.weightImage));
 			}
 			if(this.gameState == 4){
@@ -454,7 +470,7 @@ app.main = {
 		//power up Accel
 		if (Math.random() < this.POWER_ACCEL_PROBABILITY_PER_SECOND/60)
 		{
-			if(this.gameState == 2){
+			if(this.gameState == 2 || this.gameState == 5){
 					this.accel_powerups.push(new app.power_accel(this.WIDTH, this.HEIGHT, this.accelImage));
 			}
 			if(this.gameState == 4){
@@ -551,8 +567,8 @@ app.main = {
 			{
 				size.active = false;
 				
-				self.ship.spriteSize += 5;
-				self.ship.radius += 2.5;
+				self.ship.spriteSize += 8;
+				self.ship.radius += 4;
 				if(self.gameState ==4){
 					self.learnState = 3;
 				}
@@ -561,8 +577,8 @@ app.main = {
 			if (self.collides(size, self.shipb))
 			{
 				size.active = false;
-				self.shipb.spriteSize += 5;
-				self.shipb.radius += 2.5;
+				self.shipb.spriteSize += 8;
+				self.shipb.radius += 4;
 				if(self.gameState ==4){
 					self.learnState = 3;
 				}
@@ -574,7 +590,7 @@ app.main = {
 			if (self.collides(speed, self.ship))
 			{
 				speed.active = false;
-				self.ship.maxVelocity += 1.5;
+				self.ship.maxVelocity += 3;
 				if(self.gameState ==4){
 					self.learnState = 4;
 				}
@@ -582,7 +598,7 @@ app.main = {
 			if (self.collides(speed, self.shipb))
 			{
 				speed.active = false;
-				self.shipb.maxVelocity += 1.5;
+				self.shipb.maxVelocity += 3;
 				if(self.gameState ==4){
 					self.learnState = 4;
 				}
@@ -593,7 +609,7 @@ app.main = {
 			if (self.collides(weight, self.ship))
 			{
 				weight.active = false;
-				self.ship.weight ++;
+				self.ship.weight += 2;
 				if(self.gameState ==4){
 					self.learnState = 5;
 				}
@@ -601,7 +617,7 @@ app.main = {
 			if (self.collides(weight, self.shipb))
 			{
 				weight.active = false;
-				self.shipb.weight ++;
+				self.shipb.weight += 2;
 				if(self.gameState ==4){
 					self.learnState = 5;
 				}
@@ -665,7 +681,7 @@ app.main = {
 		
 		}
 		
-		if(this.gameState == 2){
+		if(this.gameState == 2 || this.gameState == 5){
 			this.ship.draw(this.ctx);
 			this.shipb.draw(this.ctx);
 			
@@ -709,17 +725,21 @@ app.main = {
 			if(this.countDown <= 5){
 					this.drawLib.outlinedText(this.ctx, "" + this.countDown, this.WIDTH/2, this.HEIGHT/2 +100, 300, "#FFBF00","white");
 			}
+			if(this.countDown >= 115 && this.gameState == 5)
+			{
+				this.drawLib.text(this.ctx, "Secret Game Mode, Avoid the gems", this.WIDTH/2, 80, 72, "white");
+			}
 		}
 		
 		if(this.gameState == 3){
 		
 				
 					
-					if(this.scorea > this.scoreb){
+					if((this.scorea > this.scoreb && this.playState == 2) || (this.scorea < this.scoreb && this.playState == 5)){
 							this.drawLib.text(this.ctx, "WINNER" , this.WIDTH/2, 300, 100, "white");
 							this.drawLib.text(this.ctx, "Blue Ship!" , this.WIDTH/2, 350, 50, "blue");
 						}
-					if(this.scoreb > this.scorea){
+					if((this.scorea < this.scoreb && this.playState == 2) || (this.scorea > this.scoreb && this.playState == 5)){
 						this.drawLib.text(this.ctx, "WINNER" , this.WIDTH/2, 300, 100, "white");
 						this.drawLib.text(this.ctx, "Red Ship! " , this.WIDTH/2, 350, 50, "red");
 					}
@@ -727,8 +747,39 @@ app.main = {
 					
 						this.drawLib.text(this.ctx, "DRAW" , this.WIDTH/2, 300, 100, "white");
 					}
+					this.ship.draw(this.ctx);
+					this.shipb.draw(this.ctx);
+					//player 1 stats
+					this.drawLib.text(this.ctx, "Crystals:  " + this.scorea , this.WIDTH - 400, 350, 40, "#13F059");
+					//size
+					this.drawLib.text(this.ctx, "Size:" , this.WIDTH - 390, 400, 40, "#8C00FF");
+					this.drawLib.rect(this.ctx, this.WIDTH - 320, 375,this.ship.spriteSize- 41 ,30,"#8C00FF");
+					//weight
+					this.drawLib.text(this.ctx, "Weight:" , this.WIDTH - 412, 450, 40, "#7D7D7D");
+					this.drawLib.rect(this.ctx, this.WIDTH - 320, 425,this.ship.weight- 4 ,30,"#7D7D7D");
+					//top speed
+					this.drawLib.text(this.ctx, "Top Speed:" , this.WIDTH - 445, 500, 40, "#1AEB28");
+					this.drawLib.rect(this.ctx, this.WIDTH - 320, 475,this.ship.maxVelocity- 9 ,30,"#1AEB28");
+					//acceleration
+					this.drawLib.text(this.ctx, "Acceleration:" , this.WIDTH - 478, 550, 40, "#EB6D1A");
+					this.drawLib.rect(this.ctx, this.WIDTH - 320, 525,this.ship.speed- 24 ,30,"#EB6D1A");
 					
-				this.drawLib.text(this.ctx, "[ PRESS ENTER TO PLAY AGAIN ]" , this.WIDTH/2, 700, 50, "white");
+					//player 2 stats
+					this.drawLib.text(this.ctx, "Crystals:  " + this.scoreb , 300, 350, 40, "#13F059");
+					//size
+					this.drawLib.text(this.ctx, "Size:" , 310, 400, 40, "#8C00FF");
+					this.drawLib.rect(this.ctx,  380, 375,this.shipb.spriteSize- 41 ,30,"#8C00FF");
+					//weight
+					this.drawLib.text(this.ctx, "Weight:" , 288, 450, 40, "#7D7D7D");
+					this.drawLib.rect(this.ctx, 380, 425,this.shipb.weight- 4 ,30,"#7D7D7D");
+					//top speed
+					this.drawLib.text(this.ctx, "Top Speed:" , 254, 500, 40, "#1AEB28");
+					this.drawLib.rect(this.ctx, 380, 475,this.shipb.maxVelocity- 9 ,30,"#1AEB28");
+					//acceleration
+					this.drawLib.text(this.ctx, "Acceleration:" ,  222, 550, 40, "#EB6D1A");
+					this.drawLib.rect(this.ctx, 380, 525,this.shipb.speed- 24 ,30,"#EB6D1A");
+					
+				this.drawLib.text(this.ctx, "[ PRESS ENTER TO PLAY AGAIN ]" , this.WIDTH/2, this.HEIGHT - 50, 50, "white");
 		
 		}
 		
@@ -800,6 +851,7 @@ app.main = {
 		
 		setTimeout(function()
 		{
+			
 			requestAnimationFrame(self.update.bind(self));
 			self.elapsed = Date.now()-self.start;
 			self.start = Date.now();
@@ -808,8 +860,10 @@ app.main = {
 		
 			self.menuControls();
 		
-		
-			if(self.gameState == 2){
+			self.ship.update();
+			self.shipb.update();
+			
+			if(self.gameState == 2 || self.gameState == 5){
 		
 				self.crystals(); 
 			
