@@ -35,6 +35,12 @@ app.main = {
 	speed_powerups: [],
 	weight_powerups: [],
 	accel_powerups: [],
+	backImages: [],
+	imgIndex: 0,
+	imgOpacityDown: 1.0,
+	imgOpacityUp: 0.0,
+	imgSwitch: false,
+	logo: undefined,
 	scorea: 0,
 	scoreb: 0,
 	friction: 15,
@@ -100,7 +106,18 @@ app.main = {
 		this.sizeImage = new Image();
 		this.weightImage = new Image();
 		this.accelImage = new Image();
-		this.backgroundImg = new Image();
+		this.logo = new Image();
+		
+		for(var i = 0; i < 3; i++){
+		
+			this.backImages.push(new Image());
+		}
+		
+		this.backImages[0].src = "img/Static background phase 1.png";
+		this.backImages[1].src = "img/Static background phase 2.png";
+		this.backImages[2].src = "img/Static background2.png";
+		
+		this.logo.src = "img/logo finalv2.png";
 		
 		this.gemImage.src = "img/base gem sheet contrasted.png";
 		this.shipImage.src = "img/player1ship.png";
@@ -109,7 +126,6 @@ app.main = {
 		this.sizeImage.src = "img/sizeupv2.png";
 		this.weightImage.src = "img/weightup.png";
 		this.accelImage.src = "img/Acccelupv2.png";
-		this.backgroundImg.src = "img/Static background2.png";
 		// END CHAD CODE
 			
 			
@@ -668,20 +684,78 @@ app.main = {
 		
 		var self = this;
 		
-		this.ctx.drawImage(this.backgroundImg, 0, 0, self.WIDTH, self.HEIGHT);
-		//this.drawLib.backgroundGradient(this.ctx, this.WIDTH, this.HEIGHT);
+		if(this.gameState == 1 || this.gameState == 3 || this.gameState == 4 || this.gameState == 6){
+			this.ctx.drawImage(this.backImages[0], 0, 0, self.WIDTH, self.HEIGHT);
+		}
 		
 		if(this.gameState == 1)
 		{
 		
-			this.drawLib.text(this.ctx, "CRYSTALLINE COLLECTOR" , this.WIDTH/2, 300, 100, "white");
+			this.ctx.drawImage(this.logo, this.WIDTH/2 - 300, 150, 600, 300);
 			
 			this.drawLib.text(this.ctx, "[ PRESS ENTER TO START ]" , this.WIDTH/2, 700, 50, "white");
 			this.drawLib.text(this.ctx, "[ PRESS L TO LEARN TO PLAY ]" , this.WIDTH/2, 900, 50, "white");
-		
 		}
 		
 		if(this.gameState == 2 || this.gameState == 5){
+			
+			//stay between 1 and 0
+			if(this.imgOpacityDown < 0){
+				this.imgOpacityDown = 0;
+				this.imgIndex++;
+				this.imgSwitch = !this.imgSwitch;
+			}
+			else if(this.imgOpacityDown > 1){
+				this.imgOpacityDown = 1;
+				this.imgIndex++;
+				this.imgSwitch = !this.imgSwitch;
+			}
+			
+			if(this.imgOpacityUp > 1){
+				this.imgOpacityUp = 1;
+			}
+			else if(this.imgOpacityUp < 0){
+				this.imgOpacityUp = 0;
+			}
+			
+			//if the direction is switched
+			if(!this.imgSwitch){
+			
+				this.imgOpacityDown -= .001;
+				this.imgOpacityUp += .001;
+			}
+			else{
+				
+				var temp = this.imgOpacityDown;
+				
+				this.imgOpacityDown = this.imgOpacityUp;
+				this.imgOpacityUp = temp;
+				this.imgSwitch = !this.imgSwitch;
+			}
+			
+			//reset imgIndex
+			if(this.imgIndex == 3){
+				this.imgIndex =  0;
+			}
+			
+			//draw the images in order {first image then second image
+			this.ctx.save();
+			this.ctx.globalAlpha = this.imgOpacityDown;
+			this.ctx.drawImage(this.backImages[this.imgIndex], 0, 0, self.WIDTH, self.HEIGHT);
+			this.ctx.restore();
+			
+			this.ctx.save();
+			this.ctx.globalAlpha = this.imgOpacityUp;
+			
+			//loop back to the first image if the above is the last image in the array
+			if(this.imgIndex + 1 >= 3){
+			
+				this.ctx.drawImage(this.backImages[0], 0, 0, self.WIDTH, self.HEIGHT);
+			}
+			else this.ctx.drawImage(this.backImages[this.imgIndex + 1], 0, 0, self.WIDTH, self.HEIGHT);
+			this.ctx.restore();
+					
+			
 			this.ship.draw(this.ctx);
 			this.shipb.draw(this.ctx);
 			
