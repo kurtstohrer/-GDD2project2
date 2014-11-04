@@ -41,6 +41,7 @@ app.main = {
 	imgOpacityUp: 0.0,
 	imgSwitch: false,
 	logo: undefined,
+	logo2: undefined,
 	scorea: 0,
 	scoreb: 0,
 	friction: 15,
@@ -109,6 +110,7 @@ app.main = {
 		this.weightImage = new Image();
 		this.accelImage = new Image();
 		this.logo = new Image();
+		this.logo2 = new Image();
 		
 		for(var i = 0; i < 4; i++){
 		
@@ -122,6 +124,7 @@ app.main = {
 		
 		
 		this.logo.src = "img/logo finalv2.png";
+		this.logo2.src = "img/Crystalline collector big icon.png";
 		
 		this.gemImage.src = "img/base gem sheet contrasted.png";
 		this.shipImage.src = "img/player1ship.png";
@@ -696,7 +699,8 @@ app.main = {
 		{
 		
 			//this.ctx.drawImage(this.logo, this.WIDTH/2 - 300, 150, 600, 300);
-			this.drawLib.text(this.ctx, "[ CRYSTALLINE COLLECTOR ]" , this.WIDTH/2, 450, 100, "white");
+			this.ctx.drawImage(this.logo2, this.WIDTH/2 - 100, 410, 200, 200);
+			this.drawLib.text(this.ctx, "[ CRYSTALLINE COLLECTOR ]" , this.WIDTH/2, 350, 100, "white");
 			
 			this.drawLib.text(this.ctx, "[ PRESS ENTER TO START ]" , this.WIDTH/2, 700, 50, "white");
 			this.drawLib.text(this.ctx, "[ PRESS L TO LEARN TO PLAY ]" , this.WIDTH/2, 800, 50, "white");
