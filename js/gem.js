@@ -53,7 +53,9 @@ app.Gem = function()
 	{
 		// BEGIN FORREST CODE -- The Wicked Awesome that is Argzero's code
 		/// <summary>
-		/// determines the closest ship to this gem in range of this gem if there is one
+		/// determines 
+		
+		//the closest ship to this gem in range of this gem if there is one
 		/// </summary>
 		//*
 		var shipA, shipB;
@@ -83,9 +85,8 @@ app.Gem = function()
 		/// modifies velocity to head towards the nearest ship within range
 		/// </summary>
 		// *
-		if(this.velocityPlus < 10) { this.velocityPlus += 0.2; }
-			
-			
+		if(this.velocityPlus < 15) { this.velocityPlus += 0.2; }
+					
 		var heading1;
 		var direction1;
 		var heading2;
@@ -95,21 +96,29 @@ app.Gem = function()
 		var avgDist;
 		var aInRange = (distA<shipA.radius*5 + 50);
 		var bInRange = (distB<shipB.radius*5 + 50);
+		
+		if(!aInRange || !bInRange){
+			if(distA < 10) { distA = 10; }
+			if(distB < 10) { distB = 10; }
+		}
 		if(aInRange && !bInRange){
 			heading1 = {x: this.x-shipA.x, y: this.y-shipA.y};
 			avgHead = heading1;
-			direction1 = {x: heading1.x/distA,y: heading1.y/distA};
+			direction1 = {x: heading1.x*(shipA.weight/2)/distA,y: heading1.y*(shipA.weight/2)/distA};
 			avgDir = direction1;
+			
 		}
 		else if(bInRange && !aInRange){
 			heading2 = {x: this.x-shipB.x, y: this.y-shipB.y};
 			avgHead = heading2;
-			direction2 = {x: heading2.x/distB,y: heading2.y/distB};
+			direction2 = {x: heading2.x*(shipB.weight/2)/distB,y: heading2.y*(shipB.weight/2)/distB};
 			avgDir = direction2;
 		}
 		else if(aInRange && bInRange){
 			heading1 = {x: this.x-shipA.x, y: this.y-shipA.y};
+			heading1 = multVector(heading1, (shipA.weight/2));
 			heading2 = {x: this.x-shipB.x, y: this.y-shipB.y};
+			heading1 = multVector(heading2, (shipB.weight/2));
 			avgHead = averageVector(heading1,heading2);
 			avgDist = Math.abs(vectorMagnitude(avgHead));
 			avgDir = {x: avgHead.x/avgDist,y: avgHead.y/avgDist};;
@@ -130,7 +139,7 @@ app.Gem = function()
 			}
 		}
 		
-		var newVector = {x: this.xVelocity-((0.1)*(mag*avgDir.x)), y: this.yVelocity-((0.1)*(mag*avgDir.y))};
+		var newVector = {x: this.xVelocity-((0.1)*(avgDir.x)), y: this.yVelocity-((0.1)*(avgDir.y))};
 		newVector = multVector(normalizeVector(newVector),mag);
 		this.xVelocity = newVector.x;
 		this.yVelocity = newVector.y;
@@ -139,9 +148,30 @@ app.Gem = function()
 		// *
 		// END FORREST CODE
 		
+		if(app.main.gameState == 2 || app.main.gameState == 5){
+			this.x += (this.xVelocity * (this.velocityPlus)) * dt * app.main.elapsed/10;
+			this.y += (this.yVelocity * (this.velocityPlus)) * dt * app.main.elapsed/10;
+			if(this.x < 0 - this.radius)
+			{
+				this.x = app.main.WIDTH + this.radius;
+			}
+			if(this.x > app.main.WIDTH + this.radius)
+			{
+				this.x = 0 - this.radius;
+			}
+			if(this.y < 0 - this.radius)
+			{
+				this.y = app.main.HEIGHT + this.radius;
+			}
+			if(this.y > app.main.HEIGHT + this.radius)
+			{
+				this.y = 0 - this.radius;
+			}
+		}
+		else{
 		
-		this.x += (this.xVelocity * (this.velocityPlus)) * dt * app.main.elapsed/10;
-		this.y += (this.yVelocity * (this.velocityPlus)) * dt * app.main.elapsed/10;
+		
+		}
 	};
 	
 	p.draw = function(ctx)
@@ -186,7 +216,6 @@ app.Gem = function()
 		// END CHAD CODE
 			
 		ctx.restore();
-		//console.log("drawing gem:" + this.x + " " + this.y);
 	};
 	
 	// BEGIN CHAD CODE

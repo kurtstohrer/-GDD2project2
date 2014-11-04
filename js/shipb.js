@@ -24,7 +24,7 @@ app.shipb = {
 	spriteCrop: 32,
 	imgIndex: 0,
 	tics: 0,
-	ticsPerFrame: 4,
+	ticsPerFrame: 8,
 	drawLib: undefined,
 	weight: 5,
 	
@@ -33,6 +33,13 @@ app.shipb = {
 		console.log("app.ship.init() called");
 		
 		this.image = shipImage;
+	},
+	update: function(){
+		if(app.main.gameState == 3){
+			this.x = app.main.WIDTH /2 - 600;
+			this.y = 200;
+			
+		}
 	},
 	
 	moveLeft: function(dt)
