@@ -51,6 +51,7 @@ app.main = {
 	learnState: 1,
 	fps: 60,
 	playState: 0,
+	learnPupRad: 0,
 	
 	aspectRatio: undefined,
     
@@ -694,10 +695,11 @@ app.main = {
 		if(this.gameState == 1)
 		{
 		
-			this.ctx.drawImage(this.logo, this.WIDTH/2 - 300, 150, 600, 300);
+			//this.ctx.drawImage(this.logo, this.WIDTH/2 - 300, 150, 600, 300);
+			this.drawLib.text(this.ctx, "[ CRYSTALLINE COLLECTOR ]" , this.WIDTH/2, 450, 100, "white");
 			
 			this.drawLib.text(this.ctx, "[ PRESS ENTER TO START ]" , this.WIDTH/2, 700, 50, "white");
-			this.drawLib.text(this.ctx, "[ PRESS L TO LEARN TO PLAY ]" , this.WIDTH/2, 900, 50, "white");
+			this.drawLib.text(this.ctx, "[ PRESS L TO LEARN TO PLAY ]" , this.WIDTH/2, 800, 50, "white");
 		}
 		
 		if(this.gameState == 2 || this.gameState == 5){
@@ -804,7 +806,7 @@ app.main = {
 			}
 			if(this.countDown >= 115 && this.gameState == 5)
 			{
-				this.drawLib.text(this.ctx, "Secret Game Mode, Avoid the gems", this.WIDTH/2, 80, 72, "white");
+				this.drawLib.text(this.ctx, "Secret game mode: avoid the gems!" , this.WIDTH/2, 300, 30, "white");
 			}
 		}
 		
@@ -871,42 +873,104 @@ app.main = {
 			
 					this.gems.forEach(function(gem)
 					{
-							gem.draw(self.ctx);
+						gem.draw(self.ctx);
+						self.ctx.save();
+						self.ctx.strokeStyle = "#AAAAAA"
+						self.ctx.beginPath();
+						self.ctx.arc(gem.x, gem.y, self.learnPupRad, 0, 2*Math.PI);
+						self.ctx.closePath();
+						self.ctx.stroke();
+						self.learnPupRad -= 3;
+						if(self.learnPupRad < 0)
+						{
+							self.learnPupRad = 200;
+						}
+						self.ctx.restore();
 					});
-				this.drawLib.text(this.ctx, "Collect these Crystals to gain points!" , this.WIDTH/2, 40, 30, "white");
+				this.drawLib.text(this.ctx, "Collect these Crystals to gain points!" , this.WIDTH/2, 300, 30, "white");
+				this.drawLib.text(this.ctx, "To move, use:" , this.WIDTH/2, 400, 30, "white");
+				this.drawLib.text(this.ctx, "WASD" , this.shipb.x, this.shipb.y + 50, 30, "white");
+				this.drawLib.text(this.ctx, "Arrow Keys" , this.ship.x, this.ship.y + 50, 30, "white");
+				
 			
 			}
 			if(this.learnState == 2){
 				
 					this.size_powerups.forEach(function(power_size)
 					{
-							power_size.draw(self.ctx);
+						power_size.draw(self.ctx);
+						self.ctx.save();
+						self.ctx.strokeStyle = "#888888"
+						self.ctx.beginPath();
+						self.ctx.arc(power_size.x, power_size.y, self.learnPupRad, 0, 2*Math.PI);
+						self.ctx.closePath();
+						self.ctx.stroke();
+						self.learnPupRad -= 3;
+						if(self.learnPupRad < 0)
+						{
+							self.learnPupRad = 200;
+						}
+						self.ctx.restore();
 					});
-				this.drawLib.text(this.ctx, "Collect these to Grow larger and collect Crystals easier!" , this.WIDTH/2, 40, 30, "white");
+				this.drawLib.text(this.ctx, "Collect these to Grow larger and collect Crystals easier!" , this.WIDTH/2, 300, 30, "white");
 			}
 			if(this.learnState == 3){
 				
-					this.speed_powerups.forEach(function(power_speed){
-			
-					power_speed.draw(self.ctx);
-				});
-				this.drawLib.text(this.ctx, "Collect these to increase top Speed!" , this.WIDTH/2, 40, 30, "white");
+					this.speed_powerups.forEach(function(power_speed)
+					{
+						power_speed.draw(self.ctx);self.ctx.save();
+						self.ctx.strokeStyle = "#AAAAAA"
+						self.ctx.beginPath();
+						self.ctx.arc(power_speed.x, power_speed.y, self.learnPupRad, 0, 2*Math.PI);
+						self.ctx.closePath();
+						self.ctx.stroke();
+						self.learnPupRad -= 3;
+						if(self.learnPupRad < 0)
+						{
+							self.learnPupRad = 200;
+						}
+						self.ctx.restore();
+					});
+				this.drawLib.text(this.ctx, "Collect these to increase top Speed!" , this.WIDTH/2, 300, 30, "white");
 			}
 			if(this.learnState == 4){
 				
-				this.weight_powerups.forEach(function(power_weight){
-			
+				this.weight_powerups.forEach(function(power_weight)
+				{
 					power_weight.draw(self.ctx);
+					self.ctx.save();
+					self.ctx.strokeStyle = "#AAAAAA"
+					self.ctx.beginPath();
+					self.ctx.arc(power_weight.x, power_weight.y, self.learnPupRad, 0, 2*Math.PI);
+					self.ctx.closePath();
+					self.ctx.stroke();
+					self.learnPupRad -= 3;
+					if(self.learnPupRad < 0)
+					{
+						self.learnPupRad = 200;
+					}
+					self.ctx.restore();		
 				});
-				this.drawLib.text(this.ctx, "Collect these to increase your Weight and Make the other player go further when you collide!" , this.WIDTH/2, 40, 30, "white");
+				this.drawLib.text(this.ctx, "Collect these to increase your Weight and Make the other player go further when you collide!" , this.WIDTH/2, 300, 30, "white");
 			}
 			if(this.learnState == 5){
 				
 				this.accel_powerups.forEach(function(power_accel){
-			
 					power_accel.draw(self.ctx);
+					self.ctx.save();
+					self.ctx.strokeStyle = "#AAAAAA"
+					self.ctx.beginPath();
+					self.ctx.arc(power_accel.x, power_accel.y, self.learnPupRad, 0, 2*Math.PI);
+					self.ctx.closePath();
+					self.ctx.stroke();
+					self.learnPupRad -= 3;
+					if(self.learnPupRad < 0)
+					{
+						self.learnPupRad = 200;
+					}
+					self.ctx.restore();
 				});
-				this.drawLib.text(this.ctx, "Collect these to increase your Acceleration!" , this.WIDTH/2, 40, 30, "white");
+				this.drawLib.text(this.ctx, "Collect these to increase your Acceleration!" , this.WIDTH/2, 300, 30, "white");
 			}
 			if(this.learnState == 6){
 				
@@ -914,7 +978,7 @@ app.main = {
 					{
 							gem.draw(self.ctx);
 					});
-				this.drawLib.text(this.ctx, "Now collect a Crystal to return to the home menu!" , this.WIDTH/2, 40, 30, "white");
+				this.drawLib.text(this.ctx, "Now collect a Crystal to return to the home menu!" , this.WIDTH/2, 300, 30, "white");
 			}
 		
 		}
