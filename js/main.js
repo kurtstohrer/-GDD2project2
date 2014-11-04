@@ -97,7 +97,8 @@ app.main = {
 		
 		this.gameState = 1;
 		this.learnState =1;
-		// BEGIN CHAD CODE		
+		// BEGIN CHAD CODE	
+		//editted by Ryan to include the whale
 		//load images
 		this.gemImage = new Image();
 		this.shipImage = new Image();
@@ -108,7 +109,7 @@ app.main = {
 		this.accelImage = new Image();
 		this.logo = new Image();
 		
-		for(var i = 0; i < 3; i++){
+		for(var i = 0; i < 4; i++){
 		
 			this.backImages.push(new Image());
 		}
@@ -116,6 +117,8 @@ app.main = {
 		this.backImages[0].src = "img/Static background phase 1.png";
 		this.backImages[1].src = "img/Static background phase 2.png";
 		this.backImages[2].src = "img/Static background2.png";
+		this.backImages[3].src = "img/Static background phase whale.png";
+		
 		
 		this.logo.src = "img/logo finalv2.png";
 		
@@ -734,7 +737,7 @@ app.main = {
 			}
 			
 			//reset imgIndex
-			if(this.imgIndex == 3){
+			if(this.imgIndex == 4){
 				this.imgIndex =  0;
 			}
 			
@@ -748,7 +751,7 @@ app.main = {
 			this.ctx.globalAlpha = this.imgOpacityUp;
 			
 			//loop back to the first image if the above is the last image in the array
-			if(this.imgIndex + 1 >= 3){
+			if(this.imgIndex + 1 >= 4){
 			
 				this.ctx.drawImage(this.backImages[0], 0, 0, self.WIDTH, self.HEIGHT);
 			}
